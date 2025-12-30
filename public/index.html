@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RumboCasa - Portal Inmobiliario</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React y ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        const { useState, useEffect, useCallback, useMemo, useRef } = React;
+        
+        // --- IMPORTACIONES DE FIREBASE ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, limit, orderBy, startAfter, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+
+        // CONFIGURACIÓN DE FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyAuwoZBV8lKsbOBeLiLc3qSHY6jaxEqnmM",
+            authDomain: "rumbocasa-7187f.firebaseapp.com",
+            projectId: "rumbocasa-7187f",
+            storageBucket: "rumbocasa-7187f.firebasestorage.app",
+            messagingSenderId: "614700920624",
+            appId: "1:614700920624:web:31f82a7a8721665efb22f5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const APP_ID = 'rumbo-casa-portal';
+        const PAGE_SIZE = 20; // Cargamos de 20 en 20
+
+        // Componente Icon optimizado
+        const Icon = React.memo(({ name, size = 20, className = "" }) => {
+            const iconRef = useRef(null);
+            useEffect(() => {
+                if (window.lucide && iconRef.current) {
+                    window.lucide.createIcons({
+                        icons: { [name]: window.lucide.icons[name] },
+                        nameAttr: 'data-lucide'
+                    });
+                }
+            }, [name]);
+            return (
+                <span className={`inline-flex items-center justify-center ${className}`}>
+                    <i ref={iconRef} data-lucide={name} style={{ width: size, height: size }}></i>
+                </span>
+            );
+        });
+
+        // Componente de Tarjeta de Inmueble
+        const ListingCard = ({ item }) => (
+            <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 group">
+                <div className="h-64 bg-slate-200 relative overflow-hidden">
+                    <img 
+                        src={item.fotos?.split(',')[0] || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800'} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                        alt="Propiedad"
+                        onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800'; }}
+                    />
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-[10px] font-black uppercase text-blue-600 tracking-wider">
+                        {item.tipo || 'Venta'}
+                    </div>
+                    <div className="absolute bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-xl font-black shadow-lg text-lg tracking-tighter">
+                        ${item.precio?.toLocaleString()}
+                    </div>
+                </div>
+                <div className="p-7">
+                    <div className="text-blue-600 font-bold text-[10px] uppercase tracking-widest mb-3 flex items-center gap-1">
+                        <Icon name="map-pin" size={12} /> {item.municipio}, {item.provincia}
+                    </div>
+                    <h3 className="text-xl font-black mb-5 line-clamp-2 text-slate-800 h-14 italic leading-tight italic">"{item.descripcion}"</h3>
+                    <div className="flex justify-between p-4 bg-slate-50 rounded-2xl text-[11px] font-black text-slate-500 mb-6">
+                        <span className="flex items-center gap-2"><Icon name="bed" size={16} className="text-blue-500"/> {item.habitaciones} Hab</span>
+                        <span className="flex items-center gap-2"><Icon name="bath" size={16} className="text-blue-500"/> {item.banos} Baños</span>
+                        <span className="flex items-center gap-2"><Icon name="maximize" size={16} className="text-blue-500"/> {item.tamano}m²</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <div className="flex flex-col">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase">Agente</span>
+                            <span className="text-sm font-black text-slate-700">{item.agenteNombre || 'RumboCasa'}</span>
+                        </div>
+                        <a href={`tel:${item.agenteContacto}`} className="bg-slate-900 text-white p-3 rounded-2xl hover:bg-blue-600 transition-colors">
+                            <Icon name="phone" size={18} />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        );
+
+        function App() {
+            const [user, setUser] = useState(null);
+            const [listings, setListings] = useState([]);
+            const [lastDoc, setLastDoc] = useState(null);
+            const [loading, setLoading] = useState(true);
+            const [loadingMore, setLoadingMore] = useState(false);
+            const [hasMore, setHasMore] = useState(true);
+            const [filter, setFilter] = useState('');
+
+            // Autenticación inicial
+            useEffect(() => {
+                const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+                    if (!currentUser) signInAnonymously(auth);
+                    setUser(currentUser);
+                });
+                return () => unsubscribe();
+            }, []);
+
+            // Carga inicial (Primeros 20)
+            useEffect(() => {
+                if (!user) return;
+                const listingsCol = collection(db, 'artifacts', APP_ID, 'public', 'data', 'listings');
+                const q = query(listingsCol, orderBy('createdAt', 'desc'), limit(PAGE_SIZE));
+
+                const unsubscribe = onSnapshot(q, (snapshot) => {
+                    const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setListings(docs);
+                    setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
+                    setHasMore(snapshot.docs.length === PAGE_SIZE);
+                    setLoading(false);
+                }, (error) => {
+                    console.error("Error cargando datos:", error);
+                    setLoading(false);
+                });
+                return () => unsubscribe();
+            }, [user]);
+
+            // Función para cargar más
+            const fetchMore = async () => {
+                if (!lastDoc || loadingMore) return;
+                setLoadingMore(true);
+                
+                const listingsCol = collection(db, 'artifacts', APP_ID, 'public', 'data', 'listings');
+                const nextQuery = query(
+                    listingsCol, 
+                    orderBy('createdAt', 'desc'), 
+                    startAfter(lastDoc), 
+                    limit(PAGE_SIZE)
+                );
+
+                try {
+                    const snapshot = await getDocs(nextQuery);
+                    const newData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setListings(prev => [...prev, ...newData]);
+                    setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
+                    setHasMore(snapshot.docs.length === PAGE_SIZE);
+                } catch (err) {
+                    console.error("Error al cargar más:", err);
+                } finally {
+                    setLoadingMore(false);
+                }
+            };
+
+            const filteredListings = listings.filter(item => 
+                (item.provincia?.toLowerCase() || "").includes(filter.toLowerCase()) || 
+                (item.municipio?.toLowerCase() || "").includes(filter.toLowerCase()) || 
+                (item.descripcion?.toLowerCase() || "").includes(filter.toLowerCase())
+            );
+
+            if (loading) return (
+                <div className="flex items-center justify-center min-h-screen bg-slate-50">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-600"></div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Iniciando RumboCasa...</p>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    {/* Header */}
+                    <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b px-6 py-4 flex justify-between items-center shadow-sm">
+                        <div className="flex items-center gap-2">
+                            <div className="bg-blue-600 p-2 rounded-xl text-white shadow-lg">
+                                <Icon name="home" size={20}/>
+                            </div>
+                            <h1 className="text-xl font-black tracking-tighter uppercase">Rumbo<span className="text-blue-600">Casa</span></h1>
+                        </div>
+                        <button className="bg-slate-900 text-white px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all">
+                            Acceso Agentes
+                        </button>
+                    </nav>
+
+                    <main className="flex-grow max-w-7xl mx-auto w-full px-6 py-12">
+                        {/* Buscador */}
+                        <header className="text-center mb-16">
+                            <h2 className="text-5xl font-black text-slate-900 mb-8 tracking-tighter">Explora Cuba.</h2>
+                            <div className="relative max-w-2xl mx-auto">
+                                <Icon name="search" className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 z-10" size={24} />
+                                <input 
+                                    type="text" 
+                                    placeholder="Municipio, provincia o palabras clave..." 
+                                    className="w-full pl-16 pr-8 py-5 rounded-[2rem] border-2 border-slate-100 outline-none focus:border-blue-500 shadow-xl font-medium transition-all text-lg" 
+                                    value={filter} 
+                                    onChange={e => setFilter(e.target.value)} 
+                                />
+                            </div>
+                        </header>
+
+                        {/* Listado */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                            {filteredListings.map(item => (
+                                <ListingCard key={item.id} item={item} />
+                            ))}
+                        </div>
+
+                        {/* Botón Cargar Más */}
+                        {hasMore && !filter && (
+                            <div className="mt-20 flex justify-center">
+                                <button 
+                                    onClick={fetchMore}
+                                    disabled={loadingMore}
+                                    className="group flex items-center gap-4 bg-white border-2 border-slate-200 px-10 py-5 rounded-[2rem] font-black uppercase text-[11px] tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all shadow-xl hover:shadow-blue-50"
+                                >
+                                    {loadingMore ? (
+                                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-blue-600"></div>
+                                    ) : (
+                                        <>Mostrar más propiedades <Icon name="chevron-down" className="group-hover:translate-y-1 transition-transform" size={18}/></>
+                                    )}
+                                </button>
+                            </div>
+                        )}
+
+                        {filteredListings.length === 0 && (
+                            <div className="text-center py-20 bg-white rounded-[3rem] border border-dashed border-slate-200">
+                                <p className="text-slate-400 font-bold italic">No se encontraron resultados.</p>
+                            </div>
+                        )}
+                    </main>
+
+                    <footer className="bg-slate-900 text-slate-500 py-12 text-center text-[10px] font-black uppercase tracking-[0.2em]">
+                        &copy; 2025 RumboCasa Cuba - Sistema de Gestión Inmobiliaria
+                    </footer>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

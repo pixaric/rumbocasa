@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RumboCasa - Portal Inmobiliario</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React y ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
+
+    <!-- Usamos type="text/babel" y data-type="module" para permitir imports en el navegador -->
+    <script type="text/babel" data-type="module">
+        const { useState, useEffect } = React;
+        
+        // --- FIREBASE SDK IMPORTS (CDN) ---
+        // Aseguramos que los módulos se importen correctamente en el navegador
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, serverTimestamp, doc, addDoc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+
+        // --- CONFIGURACIÓN (REEMPLAZA CON TUS DATOS) ---
+       const firebaseConfig = {
+  apiKey: "AIzaSyAuwoZBV8lKsbOBeLiLc3qSHY6jaxEqnmM",
+  authDomain: "rumbocasa-7187f.firebaseapp.com",
+  projectId: "rumbocasa-7187f",
+  storageBucket: "rumbocasa-7187f.firebasestorage.app",
+  messagingSenderId: "614700920624",
+  appId: "1:614700920624:web:31f82a7a8721665efb22f5"
+};
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const APP_ID = 'rumbo-casa-portal';
+        const ADMIN_EMAIL = "cardosoreinier@gmail.com"; 
+
+        const ubicacionesCuba = {
+            "La Habana": ["Plaza de la Revolución", "Playa", "Centro Habana", "Habana Vieja", "Regla", "Habana del Este", "Guanabacoa", "San Miguel del Padrón", "Diez de Octubre", "Cerro", "Marianao", "La Lisa", "Boyeros", "Arroyo Naranjo", "Cotorro"],
+            "Matanzas": ["Matanzas", "Cárdenas", "Varadero", "Colón"],
+            "Artemisa": ["Artemisa", "Mariel", "Bauta"],
+            "Pinar del Río": ["Pinar del Río", "Viñales"],
+            "Mayabeque": ["San José de las Lajas", "Güines"],
+            "Villa Clara": ["Santa Clara", "Sagua la Grande"],
+            "Cienfuegos": ["Cienfuegos", "Cruces"],
+            "Sancti Spíritus": ["Sancti Spíritus", "Trinidad"],
+            "Ciego de Ávila": ["Ciego de Ávila", "Morón"],
+            "Camagüey": ["Camagüey", "Nuevitas"],
+            "Las Tunas": ["Las Tunas", "Puerto Padre"],
+            "Holguín": ["Holguín", "Gibara"],
+            "Granma": ["Bayamo", "Manzanillo"],
+            "Santiago de Cuba": ["Santiago de Cuba", "Palma Soriano"],
+            "Guantánamo": ["Guantánamo", "Baracoa"],
+            "Isla de la Juventud": ["Nueva Gerona"]
+        };
+
+        // Helper para iconos con Lucide
+        const Icon = ({ name, size = 20, className = "" }) => {
+            useEffect(() => { 
+                if (window.lucide) {
+                    window.lucide.createIcons(); 
+                }
+            }, [name]);
+            return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
+        };
+
+        function App() {
+            const [user, setUser] = useState(null);
+            const [agentProfile, setAgentProfile] = useState(null);
+            const [listings, setListings] = useState([]);
+            const [viewMode, setViewMode] = useState('public'); 
+            const [showAuthModal, setShowAuthModal] = useState(false);
+            const [showPostModal, setShowPostModal] = useState(false);
+            const [loading, setLoading] = useState(true);
+            const [filter, setFilter] = useState('');
+            const [email, setEmail] = useState('');
+            const [password, setPassword] = useState('');
+            const [authError, setAuthError] = useState('');
+
+            const [newAgent, setNewAgent] = useState({ uid: '', name: '', email: '', phone: '' });
+            const [adminMsg, setAdminMsg] = useState('');
+
+            const [formData, setFormData] = useState({
+                tipo: 'Casa', tamano: '', habitaciones: '', banos: '', descripcion: '', precio: '', fotos: '',
+                provincia: 'La Habana', municipio: 'Playa', agenteNombre: '', agenteContacto: ''
+            });
+
+            const isAdmin = user?.email === ADMIN_EMAIL;
+
+            useEffect(() => {
+                const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+                    setUser(currentUser);
+                    if (!currentUser) {
+                        setViewMode('public');
+                        setAgentProfile(null);
+                    }
+                    setLoading(false);
+                });
+                return () => unsubscribe();
+            }, []);
+
+            useEffect(() => {
+                if (!user) return;
+                const fetchProfile = async () => {
+                    try {
+                        const profileDoc = doc(db, 'artifacts', APP_ID, 'users', user.uid, 'profile', 'data');
+                        const snap = await getDoc(profileDoc);
+                        if (snap.exists()) {
+                            const data = snap.data();
+                            setAgentProfile(data);
+                            setFormData(prev => ({ ...prev, agenteNombre: data.name || '', agenteContacto: data.phone || '' }));
+                        } else if (!isAdmin) {
+                            setAuthError("Perfil no asignado. Contacta al administrador.");
+                            await signOut(auth);
+                        }
+                    } catch (err) { console.error("Error cargando perfil:", err); }
+                };
+                fetchProfile();
+            }, [user]);
+
+            useEffect(() => {
+                const listingsCol = collection(db, 'artifacts', APP_ID, 'public', 'data', 'listings');
+                const unsubscribe = onSnapshot(listingsCol, (snapshot) => {
+                    const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setListings(docs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)));
+                }, (err) => console.error("Error de Firestore:", err));
+                return () => unsubscribe();
+            }, []);
+
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    setShowAuthModal(false);
+                    setAuthError('');
+                } catch (err) { 
+                    console.error(err);
+                    setAuthError('Error de acceso: Credenciales inválidas.'); 
+                }
+                setLoading(false);
+            };
+
+            const handleSubmitPost = async (e) => {
+                e.preventDefault();
+                if (!user) return;
+                try {
+                    const listingsCol = collection(db, 'artifacts', APP_ID, 'public', 'data', 'listings');
+                    await addDoc(listingsCol, {
+                        ...formData,
+                        precio: Number(formData.precio),
+                        habitaciones: Number(formData.habitaciones),
+                        banos: Number(formData.banos),
+                        tamano: Number(formData.tamano),
+                        agentId: user.uid,
+                        createdAt: serverTimestamp()
+                    });
+                    setShowPostModal(false);
+                    setFormData(prev => ({ ...prev, tamano: '', habitaciones: '', banos: '', descripcion: '', precio: '', fotos: '' }));
+                } catch (err) { console.error("Error al publicar:", err); }
+            };
+
+            const handleCreateAgentProfile = async (e) => {
+                e.preventDefault();
+                if (!isAdmin) return;
+                try {
+                    const profileDoc = doc(db, 'artifacts', APP_ID, 'users', newAgent.uid, 'profile', 'data');
+                    await setDoc(profileDoc, { ...newAgent, createdAt: serverTimestamp() });
+                    setAdminMsg('Perfil creado con éxito.');
+                    setNewAgent({ uid: '', name: '', email: '', phone: '' });
+                } catch (err) { setAdminMsg('Error al crear perfil.'); }
+            };
+
+            const displayListings = listings.filter(item => {
+                const search = filter.toLowerCase();
+                const matches = (item.provincia?.toLowerCase().includes(search) || 
+                                 item.municipio?.toLowerCase().includes(search) || 
+                                 item.descripcion?.toLowerCase().includes(search));
+                return viewMode === 'private' ? (matches && item.agentId === user?.uid) : matches;
+            });
+
+            return (
+                <div className="min-h-screen">
+                    {/* Navbar */}
+                    <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b px-4 py-3 shadow-sm">
+                        <div className="max-w-7xl mx-auto flex justify-between items-center">
+                            <div className="flex items-center gap-2 cursor-pointer" onClick={() => setViewMode('public')}>
+                                <div className="bg-blue-600 p-2 rounded-xl text-white"><Icon name="home" /></div>
+                                <h1 className="text-xl font-black tracking-tight">Rumbo<span className="text-blue-600">Casa</span></h1>
+                            </div>
+                            
+                            <div className="flex items-center bg-slate-100 p-1 rounded-2xl text-sm font-bold">
+                                <button onClick={() => setViewMode('public')} className={`px-4 py-2 rounded-xl transition-all ${viewMode === 'public' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Explorar</button>
+                                {user && <button onClick={() => setViewMode('private')} className={`px-4 py-2 rounded-xl transition-all ${viewMode === 'private' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Mis Anuncios</button>}
+                                {isAdmin && <button onClick={() => setViewMode('admin')} className={`px-4 py-2 rounded-xl transition-all ${viewMode === 'admin' ? 'bg-white text-red-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Admin</button>}
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                {user ? (
+                                    <div className="flex items-center gap-2">
+                                        <button onClick={() => setShowPostModal(true)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-xs font-black flex items-center gap-2 shadow-md transition-colors">
+                                            <Icon name="plus-circle" size={14}/> Publicar
+                                        </button>
+                                        <button onClick={() => signOut(auth)} className="p-2 text-slate-400 hover:text-red-500 transition-colors"><Icon name="log-out" /></button>
+                                    </div>
+                                ) : (
+                                    <button onClick={() => setShowAuthModal(true)} className="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-full text-sm font-bold transition-colors">Acceso Agentes</button>
+                                )}
+                            </div>
+                        </div>
+                    </nav>
+
+                    {viewMode !== 'admin' ? (
+                        <main className="max-w-7xl mx-auto px-4 py-10">
+                            <div className="mb-12 text-center">
+                                <h2 className="text-4xl font-black mb-6 tracking-tight text-slate-800">
+                                    {viewMode === 'public' ? 'Hogares que inspiran historias' : 'Mi Inventario de Propiedades'}
+                                </h2>
+                                <div className="relative max-w-xl mx-auto">
+                                    <Icon name="search" className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
+                                    <input 
+                                        type="text" 
+                                        placeholder="Busca por municipio, provincia o descripción..." 
+                                        className="w-full pl-14 pr-6 py-4 rounded-3xl border-2 border-slate-100 outline-none focus:border-blue-500 shadow-sm transition-all" 
+                                        value={filter} 
+                                        onChange={e => setFilter(e.target.value)} 
+                                    />
+                                </div>
+                            </div>
+
+                            {displayListings.length === 0 ? (
+                                <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-300">
+                                    <div className="text-slate-300 mb-4 flex justify-center"><Icon name="search" size={48}/></div>
+                                    <p className="text-slate-500 font-medium text-lg">No se encontraron propiedades que coincidan con tu búsqueda.</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {displayListings.map(item => (
+                                        <div key={item.id} className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 group">
+                                            <div className="h-64 bg-slate-200 relative overflow-hidden">
+                                                <img 
+                                                    src={item.fotos?.split(',')[0] || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800'} 
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                                                    alt="Propiedad"
+                                                />
+                                                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-[10px] font-black uppercase text-blue-600 tracking-wider">
+                                                    {item.tipo}
+                                                </div>
+                                                <div className="absolute bottom-4 right-4 bg-white px-4 py-2 rounded-xl font-black shadow-lg text-lg tracking-tighter">
+                                                    ${item.precio.toLocaleString()}
+                                                </div>
+                                            </div>
+                                            <div className="p-7">
+                                                <div className="text-blue-600 font-bold text-[10px] uppercase tracking-widest mb-3 flex items-center gap-1">
+                                                    <Icon name="map-pin" size={14} /> {item.municipio}, {item.provincia}
+                                                </div>
+                                                <h3 className="text-xl font-black mb-5 line-clamp-2 text-slate-800 leading-tight h-14">{item.descripcion}</h3>
+                                                <div className="flex justify-between p-4 bg-slate-50 rounded-2xl text-[11px] font-black text-slate-500 mb-6">
+                                                    <span className="flex items-center gap-2"><Icon name="bed-double" size={16} className="text-blue-500"/> {item.habitaciones} Hab</span>
+                                                    <span className="flex items-center gap-2"><Icon name="bath" size={16} className="text-blue-500"/> {item.banos} Baños</span>
+                                                    <span className="flex items-center gap-2"><Icon name="maximize" size={16} className="text-blue-500"/> {item.tamano} m²</span>
+                                                </div>
+                                                <div className="flex items-center justify-between pt-2">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-blue-600 font-black text-[10px]">
+                                                            {item.agenteNombre?.charAt(0) || 'A'}
+                                                        </div>
+                                                        <span className="text-xs font-bold text-slate-600 truncate max-w-[120px]">{item.agenteNombre}</span>
+                                                    </div>
+                                                    <a href={`tel:${item.agenteContacto}`} className="bg-blue-600 text-white p-2.5 rounded-xl hover:bg-blue-700 transition-colors shadow-blue-100 shadow-md">
+                                                        <Icon name="phone" size={18} />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </main>
+                    ) : (
+                        /* VISTA ADMIN */
+                        <div className="max-w-2xl mx-auto py-20 px-4">
+                            <div className="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-100">
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="bg-red-50 p-3 rounded-2xl text-red-600"><Icon name="user-plus" size={24}/></div>
+                                    <h2 className="text-2xl font-black text-slate-800 tracking-tight">Registro de Agentes</h2>
+                                </div>
+                                
+                                {adminMsg && (
+                                    <div className={`mb-6 p-4 rounded-2xl font-bold text-sm flex items-center gap-2 ${adminMsg.includes('éxito') ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                                        <Icon name={adminMsg.includes('éxito') ? 'check-circle' : 'alert-circle'} size={18}/> {adminMsg}
+                                    </div>
+                                )}
+
+                                <form onSubmit={handleCreateAgentProfile} className="space-y-5">
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] font-black text-slate-400 uppercase ml-2">UID de Usuario (Consola Firebase)</label>
+                                        <input required placeholder="Ejem: 7x2v..." className="w-full p-4 border-2 border-slate-100 rounded-2xl focus:border-red-500 outline-none font-bold" value={newAgent.uid} onChange={e => setNewAgent({...newAgent, uid: e.target.value})} />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Nombre Completo</label>
+                                        <input required placeholder="Nombre del Agente" className="w-full p-4 border-2 border-slate-100 rounded-2xl focus:border-red-500 outline-none font-bold" value={newAgent.name} onChange={e => setNewAgent({...newAgent, name: e.target.value})} />
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Email</label>
+                                            <input required type="email" placeholder="agente@ejemplo.com" className="w-full p-4 border-2 border-slate-100 rounded-2xl focus:border-red-500 outline-none font-bold" value={newAgent.email} onChange={e => setNewAgent({...newAgent, email: e.target.value})} />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Teléfono</label>
+                                            <input required placeholder="+53..." className="w-full p-4 border-2 border-slate-100 rounded-2xl focus:border-red-500 outline-none font-bold" value={newAgent.phone} onChange={e => setNewAgent({...newAgent, phone: e.target.value})} />
+                                        </div>
+                                    </div>
+                                    <button className="w-full py-5 bg-slate-900 text-white rounded-[1.5rem] font-black text-lg hover:bg-red-600 transition-all shadow-lg mt-4">
+                                        Autorizar Agente
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* MODAL AUTH */}
+                    {showAuthModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-sm">
+                            <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-10 relative">
+                                <button onClick={() => setShowAuthModal(false)} className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-colors"><Icon name="x"/></button>
+                                <div className="text-center mb-8">
+                                    <div className="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center text-white mx-auto mb-4 shadow-xl shadow-blue-200">
+                                        <Icon name="lock" size={30}/>
+                                    </div>
+                                    <h2 className="text-2xl font-black text-slate-800">Acceso Agentes</h2>
+                                    <p className="text-slate-400 text-sm font-bold">Inicia sesión para gestionar anuncios</p>
+                                </div>
+                                {authError && <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-2xl text-xs font-bold flex items-center gap-2"><Icon name="alert-circle" size={16}/> {authError}</div>}
+                                <form onSubmit={handleLogin} className="space-y-4">
+                                    <input type="email" required placeholder="Correo electrónico" className="w-full p-4 rounded-2xl border-2 border-slate-100 font-bold outline-none focus:border-blue-500" value={email} onChange={e => setEmail(e.target.value)} />
+                                    <input type="password" required placeholder="Contraseña" className="w-full p-4 rounded-2xl border-2 border-slate-100 font-bold outline-none focus:border-blue-500" value={password} onChange={e => setPassword(e.target.value)} />
+                                    <button type="submit" disabled={loading} className="w-full py-5 bg-blue-600 text-white rounded-2xl font-black text-lg shadow-xl hover:bg-blue-700 transition-all">
+                                        {loading ? 'Entrando...' : 'Ingresar'}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* MODAL PUBLICACIÓN */}
+                    {showPostModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-sm">
+                            <div className="bg-white w-full max-w-3xl rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+                                <div className="p-8 border-b flex justify-between items-center bg-slate-50/50">
+                                    <h2 className="text-2xl font-black text-slate-800">Publicar Propiedad</h2>
+                                    <button onClick={() => setShowPostModal(false)} className="p-2 hover:bg-white rounded-full transition-colors"><Icon name="x" size={24}/></button>
+                                </div>
+                                <form onSubmit={handleSubmitPost} className="p-8 overflow-y-auto space-y-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Tipo de Propiedad</label>
+                                            <select className="w-full p-4 rounded-2xl border-2 border-slate-100 font-bold bg-white" value={formData.tipo} onChange={e => setFormData({...formData, tipo: e.target.value})}>
+                                                <option>Casa</option><option>Apartamento</option><option>Local</option>
+                                            </select>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Precio USD</label>
+                                            <input required type="number" placeholder="Ej: 45000" className="w-full p-4 border-2 border-slate-100 rounded-2xl font-bold" value={formData.precio} onChange={e => setFormData({...formData, precio: e.target.value})} />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Provincia</label>
+                                            <select className="w-full p-4 rounded-2xl border-2 border-slate-100 font-bold bg-white" value={formData.provincia} onChange={e => {
+                                                const prov = e.target.value;
+                                                setFormData({...formData, provincia: prov, municipio: ubicacionesCuba[prov][0]});
+                                            }}>
+                                                {Object.keys(ubicacionesCuba).map(p => <option key={p} value={p}>{p}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Municipio</label>
+                                            <select className="w-full p-4 rounded-2xl border-2 border-slate-100 font-bold bg-white" value={formData.municipio} onChange={e => setFormData({...formData, municipio: e.target.value})}>
+                                                {ubicacionesCuba[formData.provincia].map(m => <option key={m} value={m}>{m}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className="md:col-span-2 grid grid-cols-3 gap-4">
+                                            <input type="number" placeholder="Habs" className="p-4 border-2 border-slate-100 rounded-2xl font-bold" value={formData.habitaciones} onChange={e => setFormData({...formData, habitaciones: e.target.value})} />
+                                            <input type="number" placeholder="Baños" className="p-4 border-2 border-slate-100 rounded-2xl font-bold" value={formData.banos} onChange={e => setFormData({...formData, banos: e.target.value})} />
+                                            <input type="number" placeholder="m²" className="p-4 border-2 border-slate-100 rounded-2xl font-bold" value={formData.tamano} onChange={e => setFormData({...formData, tamano: e.target.value})} />
+                                        </div>
+                                        <div className="md:col-span-2 space-y-1">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">URL Foto (Opcional)</label>
+                                            <input placeholder="https://..." className="w-full p-4 border-2 border-slate-100 rounded-2xl font-bold" value={formData.fotos} onChange={e => setFormData({...formData, fotos: e.target.value})} />
+                                        </div>
+                                        <div className="md:col-span-2 space-y-1">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase ml-2">Descripción del Inmueble</label>
+                                            <textarea required placeholder="Detalles de la venta..." className="w-full p-4 border-2 border-slate-100 rounded-2xl font-medium h-32" value={formData.descripcion} onChange={e => setFormData({...formData, descripcion: e.target.value})} />
+                                        </div>
+                                    </div>
+                                    <button type="submit" className="w-full py-5 bg-blue-600 text-white rounded-[1.5rem] font-black text-xl hover:bg-blue-700 shadow-xl transition-all">
+                                        Publicar Anuncio Ahora
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
