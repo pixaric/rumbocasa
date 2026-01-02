@@ -10,19 +10,12 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
         .hidden-view { display: none !important; }
         .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        .card-shadow { box-shadow: 0 15px 50px -15px rgba(0, 0, 0, 0.08); }
         
         .slide-down { animation: slideDown 0.3s ease-out forwards; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-            gap: 6px;
-        }
 
         .description-truncated {
             display: -webkit-box;
@@ -31,200 +24,205 @@
             overflow: hidden;
         }
 
-        /* Ajustes de reducción para móviles */
         @media (max-width: 640px) {
-            h1 { font-size: 1.5rem !important; line-height: 1.8rem !important; }
-            .section-title { font-size: 1.4rem !important; }
-            .card-title { font-size: 0.95rem !important; }
-            .price-tag { font-size: 0.9rem !important; }
-            .text-detail-title { font-size: 1.25rem !important; }
-            .text-detail-price { font-size: 1.5rem !important; }
-            .text-detail-desc { font-size: 0.85rem !important; line-height: 1.3rem !important; }
-            .p-mobile-reduced { padding: 0.75rem !important; }
-            .gap-mobile-reduced { gap: 0.5rem !important; }
-            input, select, textarea { font-size: 13px !important; padding: 0.6rem !important; } 
-            .btn-mobile-large { padding: 0.65rem !important; font-size: 0.85rem !important; }
-            .nav-h { height: 3.25rem !important; }
-            .logo-text { font-size: 1rem !important; }
-            .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); gap: 4px; }
-        }
-
-        @media (min-width: 1536px) {
-            .max-w-7xl { max-width: 1600px; }
-            body { font-size: 18px; }
+            h1 { font-size: 1.4rem !important; line-height: 1.7rem !important; }
+            .text-detail-title { font-size: 1.2rem !important; }
+            .text-detail-price { font-size: 1.4rem !important; }
+            .text-detail-desc { font-size: 0.8rem !important; line-height: 1.2rem !important; }
+            input, select, textarea { font-size: 12px !important; padding: 0.5rem !important; }
+            .nav-h { height: 3.5rem !important; }
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-900 transition-all duration-300">
+<body class="bg-slate-50 min-h-screen text-slate-900">
 
     <!-- Navbar -->
-    <nav class="bg-white/90 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-[100] py-1 lg:py-3 nav-h">
-        <div class="max-w-7xl mx-auto px-4 lg:px-6 h-full flex justify-between items-center">
-            <div class="flex items-center gap-2 lg:gap-3 cursor-pointer" onclick="navigateTo('catalog')">
-                <div class="bg-blue-600 p-1 lg:p-3 rounded-lg lg:rounded-2xl text-white shadow-lg shadow-blue-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lg:w-6 lg:h-6"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-[100] nav-h flex items-center">
+        <div class="max-w-7xl mx-auto px-4 w-full flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('catalog')">
+                <div class="bg-blue-600 p-1.5 rounded-lg text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 </div>
-                <span class="text-sm lg:text-2xl font-extrabold tracking-tight text-slate-900 logo-text">Rumbo Casa</span>
+                <span class="text-base lg:text-xl font-extrabold tracking-tight">Rumbo Casa</span>
             </div>
             
-            <div class="flex items-center gap-2 lg:gap-5">
-                <div id="admin-nav" class="hidden-view flex items-center gap-2 lg:gap-6 border-r border-slate-200 pr-2 lg:pr-5">
-                    <button onclick="navigateTo('admin-panel')" class="text-slate-600 hover:text-blue-600 font-bold text-[9px] lg:text-base transition">Gestionar</button>
+            <div class="flex items-center gap-3">
+                <div id="admin-nav" class="hidden-view flex items-center gap-4 border-r border-slate-200 pr-4">
+                    <button onclick="navigateTo('admin-panel')" class="text-slate-600 hover:text-blue-600 font-bold text-xs lg:text-sm">Gestión</button>
                 </div>
-                <button id="btn-publish-main" onclick="handlePublishAuth()" class="bg-slate-900 hover:bg-slate-800 text-white px-2.5 lg:px-6 py-1.5 lg:py-3 rounded-lg lg:rounded-xl font-bold transition text-[9px] lg:text-base shadow-lg">
+                <button id="btn-publish-main" onclick="handlePublishAuth()" class="bg-slate-900 text-white px-3 lg:px-5 py-1.5 lg:py-2.5 rounded-lg font-bold text-xs lg:text-sm shadow-md">
                     Publicar
                 </button>
-                <button id="btn-logout" onclick="logout()" class="hidden-view text-red-500 hover:bg-red-50 p-1 rounded-lg transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <button id="btn-logout" onclick="logout()" class="hidden-view text-red-500 p-1">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </button>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 lg:px-6 py-4 lg:py-12">
+    <main class="max-w-7xl mx-auto px-4 py-6 lg:py-10">
         
         <!-- VISTA: Catálogo Público -->
         <section id="view-catalog" class="view-section">
-            <div class="mb-4 lg:mb-12">
-                <h1 class="text-xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">Propiedades en <span class="text-blue-600">Cuba</span></h1>
-                <p class="text-slate-500 mt-0.5 lg:mt-3 text-xs lg:text-xl font-medium">Encuentra tu próximo hogar hoy mismo.</p>
+            <div class="mb-6 lg:mb-10">
+                <h1 class="text-2xl lg:text-4xl font-extrabold text-slate-900">Encuentra tu <span class="text-blue-600">Hogar</span></h1>
+                <p class="text-slate-500 text-xs lg:text-lg">Explora las mejores propiedades en Cuba.</p>
             </div>
 
-            <!-- Buscador y Filtro -->
-            <div class="mb-6 space-y-2 lg:space-y-4 max-w-5xl">
-                <div class="flex flex-col sm:flex-row gap-2 lg:gap-3">
+            <div class="mb-6 space-y-3">
+                <div class="flex gap-2">
                     <div class="relative flex-1">
-                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar título, lugar..." class="w-full pl-9 lg:pl-12 pr-4 py-2 lg:py-5 rounded-xl lg:rounded-2xl bg-white border border-slate-200 focus:ring-4 focus:ring-blue-100 transition-all outline-none card-shadow text-xs lg:text-lg">
-                        <svg class="absolute left-3 lg:left-4 top-2.5 lg:top-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar..." class="w-full pl-9 py-2 lg:py-3.5 rounded-xl border border-slate-200 shadow-sm outline-none text-xs lg:text-base">
+                        <svg class="absolute left-3 top-2.5 lg:top-3.5 text-slate-400" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </div>
-                    <button onclick="toggleFilters()" class="bg-white border border-slate-200 px-3 lg:px-6 py-2 lg:py-5 rounded-xl lg:rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-50 transition card-shadow text-xs lg:text-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                    <button onclick="toggleFilters()" class="bg-white border border-slate-200 px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-2 hover:bg-slate-50">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
                         Filtros
                     </button>
                 </div>
 
-                <div id="filter-panel" class="hidden-view bg-white rounded-xl lg:rounded-3xl p-3 lg:p-10 border border-slate-200 card-shadow slide-down">
-                    <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-6">
-                        <div class="space-y-1">
-                            <label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Provincia</label>
-                            <select id="filter-province" onchange="updateFilterMunicipalities()" class="w-full p-1.5 lg:p-4 text-[10px] lg:text-base rounded-lg lg:rounded-xl bg-slate-50 border-none ring-1 ring-slate-200"></select>
+                <div id="filter-panel" class="hidden-view bg-white rounded-xl p-4 border border-slate-200 shadow-sm slide-down">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div>
+                            <label class="text-[8px] font-bold text-slate-400 uppercase">Provincia</label>
+                            <select id="filter-province" onchange="updateFilterMunicipalities()" class="w-full mt-1 p-1.5 rounded-lg bg-slate-50 border-none ring-1 ring-slate-200 text-xs"></select>
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Municipio</label>
-                            <select id="filter-municipality" onchange="applyFilters()" class="w-full p-1.5 lg:p-4 text-[10px] lg:text-base rounded-lg lg:rounded-xl bg-slate-50 border-none ring-1 ring-slate-200"></select>
+                        <div>
+                            <label class="text-[8px] font-bold text-slate-400 uppercase">Municipio</label>
+                            <select id="filter-municipality" onchange="applyFilters()" class="w-full mt-1 p-1.5 rounded-lg bg-slate-50 border-none ring-1 ring-slate-200 text-xs"></select>
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Habitaciones</label>
-                            <select id="filter-rooms" onchange="applyFilters()" class="w-full p-1.5 lg:p-4 text-[10px] lg:text-base rounded-lg lg:rounded-xl bg-slate-50 border-none ring-1 ring-slate-200">
-                                <option value="">Cualquiera</option>
-                                <option value="1">1+</option><option value="2">2+</option><option value="3">3+</option>
+                        <div>
+                            <label class="text-[8px] font-bold text-slate-400 uppercase">Tipo</label>
+                            <select id="filter-type" onchange="applyFilters()" class="w-full mt-1 p-1.5 rounded-lg bg-slate-50 border-none ring-1 ring-slate-200 text-xs">
+                                <option value="">Todos</option>
+                                <option value="Casa">Casa</option>
+                                <option value="Apartamento">Apartamento</option>
+                                <option value="Penthouse">Penthouse</option>
+                                <option value="Habitación">Habitación</option>
                             </select>
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Máx</label>
-                            <input type="number" id="filter-price-max" oninput="applyFilters()" placeholder="Ej: 50000" class="w-full p-1.5 lg:p-4 text-[10px] lg:text-base rounded-lg lg:rounded-xl bg-slate-50 ring-1 ring-slate-200 outline-none">
+                        <div>
+                            <label class="text-[8px] font-bold text-slate-400 uppercase">Precio Máx</label>
+                            <input type="number" id="filter-price-max" oninput="applyFilters()" placeholder="Ej: 50000" class="w-full mt-1 p-1.5 rounded-lg bg-slate-50 ring-1 ring-slate-200 outline-none text-xs">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Contador de resultados -->
-            <div id="results-counter" class="mb-4 lg:mb-6 flex items-center gap-2">
-                <span class="bg-slate-200 text-slate-600 px-2 py-0.5 lg:px-3 lg:py-1 rounded-full text-[9px] lg:text-sm font-bold" id="results-count">0 inmuebles</span>
-            </div>
-
-            <div id="catalog-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-8"></div>
+            <div id="catalog-grid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
         </section>
 
         <!-- VISTA: Detalle -->
         <section id="view-details" class="view-section hidden-view">
-            <div id="details-content" class="max-w-6xl mx-auto"></div>
+            <div id="details-content" class="max-w-4xl mx-auto"></div>
         </section>
 
-        <!-- VISTAS DE ADMINISTRACIÓN -->
+        <!-- VISTA: Login -->
         <section id="view-login" class="view-section hidden-view">
-            <div class="max-w-md mx-auto mt-4 lg:mt-20 bg-white rounded-2xl p-5 lg:p-10 border border-slate-200 shadow-2xl">
-                <h2 class="text-base lg:text-2xl font-bold mb-4 text-center">Acceso</h2>
-                <form id="form-login" class="space-y-3 lg:space-y-6">
-                    <input type="text" id="login-user" placeholder="Usuario" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs lg:text-sm">
-                    <input type="password" id="login-pass" placeholder="Contraseña" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs lg:text-sm">
-                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs lg:text-lg shadow-lg">Entrar</button>
-                    <button type="button" onclick="navigateTo('catalog')" class="w-full text-slate-400 font-bold py-1 text-[8px] lg:text-[10px] uppercase tracking-widest">Cerrar</button>
+            <div class="max-w-xs mx-auto mt-10 bg-white rounded-2xl p-6 border border-slate-200 shadow-xl">
+                <h2 class="text-lg font-bold mb-4 text-center">Acceso Admin</h2>
+                <form id="form-login" class="space-y-4">
+                    <input type="text" id="login-user" placeholder="Usuario" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+                    <input type="password" id="login-pass" placeholder="Contraseña" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-xl text-sm">Entrar</button>
+                    <button type="button" onclick="navigateTo('catalog')" class="w-full text-slate-400 text-[10px] uppercase font-bold text-center">Cancelar</button>
                 </form>
             </div>
         </section>
 
+        <!-- VISTA: Panel Admin -->
         <section id="view-admin-panel" class="view-section hidden-view">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 lg:mb-10">
-                <h2 class="text-lg lg:text-3xl font-bold">Gestión</h2>
-                <div class="relative w-full sm:w-auto">
-                    <input type="text" id="admin-search" oninput="renderAdminList()" placeholder="Buscar..." class="w-full pl-8 p-1.5 lg:p-4 border rounded-xl lg:rounded-2xl outline-none border-slate-200 text-xs lg:text-base">
-                    <svg class="absolute left-2.5 top-2 lg:top-4.5 text-slate-300" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+                <div>
+                    <h2 class="text-xl lg:text-3xl font-bold">Gestión de Inmuebles</h2>
+                    <p class="text-slate-400 text-xs">Administra tus publicaciones activas.</p>
                 </div>
+                <button onclick="openNewListingForm()" class="w-full lg:w-auto bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                    Nuevo Inmueble
+                </button>
             </div>
-            <div class="bg-white rounded-xl lg:rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm overflow-x-auto">
-                <table class="w-full text-left text-[10px] lg:text-base min-w-[400px]">
-                    <thead class="bg-slate-50 border-b border-slate-200">
-                        <tr>
-                            <th class="px-3 py-2 lg:px-6 lg:py-4 text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase">Ref</th>
-                            <th class="px-3 py-2 lg:px-6 lg:py-4 text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase">Título</th>
-                            <th class="px-3 py-2 lg:px-6 lg:py-4 text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase text-right">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-list" class="divide-y divide-slate-100"></tbody>
-                </table>
+            
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-3 bg-slate-50 border-b flex items-center gap-2">
+                    <svg width="14" height="14" class="text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" id="admin-search" oninput="renderAdminList()" placeholder="Filtrar por título, ref o dueño..." class="bg-transparent border-none outline-none text-xs flex-1">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs lg:text-sm">
+                        <thead class="bg-slate-50 border-b">
+                            <tr>
+                                <th class="px-4 py-3 font-bold text-slate-400 uppercase text-[10px]">Ref</th>
+                                <th class="px-4 py-3 font-bold text-slate-400 uppercase text-[10px]">Inmueble / Dueño</th>
+                                <th class="px-4 py-3 font-bold text-slate-400 uppercase text-[10px] text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-list" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
+        <!-- VISTA: Formulario -->
         <section id="view-publish" class="view-section hidden-view">
-            <div class="max-w-4xl mx-auto bg-white rounded-2xl lg:rounded-[2.5rem] p-4 lg:p-14 border border-slate-200 shadow-2xl">
-                <div class="flex items-center gap-2 mb-4 lg:mb-10">
-                    <button onclick="navigateTo('admin-panel')" class="p-1 lg:p-3 bg-slate-100 rounded-lg">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+            <div class="max-w-2xl mx-auto bg-white rounded-2xl p-5 lg:p-8 border border-slate-200 shadow-xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <button onclick="navigateTo('admin-panel')" class="p-2 bg-slate-100 rounded-lg">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
                     </button>
-                    <h2 id="form-title" class="text-base lg:text-3xl font-extrabold">Publicar</h2>
+                    <h2 id="form-title" class="text-lg lg:text-2xl font-extrabold">Datos del Inmueble</h2>
                 </div>
-                <form id="form-listing" class="grid grid-cols-1 md:grid-cols-2 gap-2 lg:gap-8">
+                <form id="form-listing" class="grid grid-cols-2 gap-4">
                     <input type="hidden" id="edit-id">
-                    <div class="md:col-span-1"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Referencia</label><input type="text" id="ref-number" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
-                    <div class="md:col-span-1"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Título</label><input type="text" id="title" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
-                    <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Tipo</label><select id="property-type" class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"><option>Casa Independiente</option><option>Apartamento</option><option>Biplanta</option><option>Finca</option></select></div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Hab</label><input type="number" id="rooms" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
-                        <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Baños</label><input type="number" id="bathrooms" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
-                    </div>
-                    <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Venta</label><input type="number" id="price-sale" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
-                    <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Tasación</label><input type="number" id="price-original" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
-                    <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Provincia</label><select id="province" onchange="updateMunicipalities()" class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></select></div>
-                    <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Municipio</label><select id="municipality" class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></select></div>
-                    <div class="md:col-span-2"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Fotos (URLs)</label><textarea id="photo-urls" rows="2" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none font-mono text-[10px] lg:text-xs border border-slate-200"></textarea></div>
-                    <div class="md:col-span-2"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Descripción</label><textarea id="description" rows="3" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none text-xs lg:text-base border border-slate-200"></textarea></div>
-                    <div class="md:col-span-1"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Nombre</label><input type="text" id="contact-name" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
-                    <div class="md:col-span-1"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">WhatsApp</label><input type="tel" id="contact-phone" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
-                    <div class="md:col-span-2 flex gap-2 pt-3 border-t">
-                        <button type="button" onclick="navigateTo('admin-panel')" class="px-3 py-2 border-2 border-slate-100 rounded-lg lg:rounded-xl font-bold text-xs lg:text-base">Cerrar</button>
-                        <button type="submit" id="submit-btn" class="flex-1 bg-blue-600 text-white font-bold py-2 lg:py-4 rounded-lg lg:rounded-xl text-xs lg:text-lg shadow-xl">Guardar</button>
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Referencia</label><input type="text" id="ref-number" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></div>
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Título</label><input type="text" id="title" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></div>
+                    
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Precio Original</label><input type="number" id="price-original" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></div>
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Precio Venta (Actual)</label><input type="number" id="price-sale" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></div>
+                    
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Provincia</label><select id="province" onchange="updateMunicipalities()" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></select></div>
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Municipio</label><select id="municipality" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></select></div>
+                    
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Habitaciones</label><input type="number" id="rooms" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></div>
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Baños</label><input type="number" id="bathrooms" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></div>
+                    
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Tamaño (m²)</label><input type="number" id="size" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></div>
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Tipo de Casa</label><select id="house-type" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        <option value="Casa">Casa</option>
+                        <option value="Apartamento">Apartamento</option>
+                        <option value="Penthouse">Penthouse</option>
+                        <option value="Propiedad Horizontal">Propiedad Horizontal</option>
+                        <option value="Villa">Villa</option>
+                        <option value="Habitación">Habitación</option>
+                    </select></div>
+                    
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">Nombre del Dueño</label><input type="text" id="owner-name" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></div>
+                    <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400 uppercase">WhatsApp Dueño</label><input type="tel" id="contact-phone" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></div>
+                    
+                    <div class="col-span-2"><label class="text-[9px] font-bold text-slate-400 uppercase">Fotos (Una URL por línea)</label><textarea id="photo-urls" rows="3" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-[10px] font-mono"></textarea></div>
+                    <div class="col-span-2"><label class="text-[9px] font-bold text-slate-400 uppercase">Descripción</label><textarea id="description" rows="4" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg"></textarea></div>
+                    
+                    <div class="col-span-2 pt-4">
+                        <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg">Guardar Publicación</button>
                     </div>
                 </form>
             </div>
         </section>
     </main>
 
-    <!-- Modal Borrado -->
-    <div id="delete-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 z-[200] hidden-view">
-        <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
-            <h3 class="text-base lg:text-xl font-bold mb-1 text-center">¿Eliminar anuncio?</h3>
-            <p class="text-slate-500 text-center mb-5 text-[10px] lg:text-sm">Esta acción no se puede deshacer.</p>
+    <!-- Modals -->
+    <div id="delete-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-[200] hidden-view">
+        <div class="bg-white rounded-2xl p-6 max-w-xs w-full shadow-2xl">
+            <h3 class="font-bold text-center mb-4 text-sm">¿Confirmar borrado?</h3>
             <div class="flex gap-2">
-                <button onclick="closeDeleteModal()" class="flex-1 py-2.5 border-2 border-slate-50 rounded-xl font-bold text-xs">No</button>
-                <button id="confirm-delete-btn" class="flex-1 py-2.5 bg-red-600 text-white rounded-xl font-bold text-xs">Borrar</button>
+                <button onclick="closeDeleteModal()" class="flex-1 py-2 border rounded-xl text-xs font-bold">No</button>
+                <button id="confirm-delete-btn" class="flex-1 py-2 bg-red-600 text-white rounded-xl text-xs font-bold">Borrar</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div id="toast" class="fixed bottom-6 lg:bottom-10 left-1/2 -translate-x-1/2 z-[300] transform translate-y-32 opacity-0 transition-all duration-500">
-        <div id="toast-body" class="bg-slate-900 text-white px-4 py-2.5 rounded-xl lg:rounded-2xl shadow-2xl font-bold text-[10px] lg:text-sm flex items-center gap-3">
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] transform translate-y-32 opacity-0 transition-all duration-300">
+        <div id="toast-body" class="bg-slate-900 text-white px-5 py-2 rounded-full shadow-xl font-bold text-xs">
             <span id="toast-text"></span>
         </div>
     </div>
@@ -253,22 +251,22 @@
         let deleteTargetId = null;
 
         const cubaData = {
-            "Pinar del Río": ["Pinar del Río", "Consolación del Sur", "Viñales", "San Juan y Martínez", "San Luis", "Guane", "Mantua", "Minas de Matahambre", "Sandino", "Los Palacios", "La Palma"],
-            "Artemisa": ["Artemisa", "Mariel", "Guanajay", "Caimito", "Bauta", "San Antonio de los Baños", "Güira de Melena", "Alquízar", "San Cristóbal", "Candelaria", "Bahía Honda"],
-            "La Habana": ["Playa", "Plaza de la Revolución", "Centro Habana", "Habana Vieja", "Regla", "Habana del Este", "Guanabacoa", "San Miguel del Padrón", "Diez de Octubre", "Cerro", "Marianao", "La Lisa", "Boyeros", "Arroyo Naranjo", "Cotorro"],
-            "Mayabeque": ["San José de las Lajas", "Bejucal", "Quivicán", "Jaruco", "Santa Cruz del Norte", "Madruga", "Nueva Paz", "San Nicolás", "Güines", "Melena del Sur", "Batabanó"],
-            "Matanzas": ["Matanzas", "Cárdenas", "Varadero", "Jovellanos", "Colón", "Jagüey Grande", "Calimete", "Los Arabos", "Martí", "Pedro Betancourt", "Perico", "Unión de Reyes", "Limonar", "Ciénaga de Zapata"],
-            "Villa Clara": ["Santa Clara", "Sagua la Grande", "Placetas", "Caibarién", "Remedios", "Camajuaní", "Santo Domingo", "Ranchuelo", "Manicaragua", "Cifuentes", "Corralillo", "Encrucijada", "Quemado de Güines"],
+            "Pinar del Río": ["Pinar del Río", "Consolación del Sur", "Guane", "La Palma", "Los Palacios", "Mantua", "Minas de Matahambre", "Sandino", "San Juan y Martínez", "San Luis", "Viñales"],
+            "Artemisa": ["Artemisa", "Alquízar", "Bauta", "Caimito", "Guanajay", "Güira de Melena", "Mariel", "Bahía Honda", "San Cristóbal", "San Antonio de los Baños", "Candelaria"],
+            "La Habana": ["Playa", "Plaza de la Revolución", "Centro Habana", "Habana Vieja", "Regla", "La Habana del Este", "Guanabacoa", "San Miguel del Padrón", "Diez de Octubre", "Cerro", "Marianao", "La Lisa", "Boyeros", "Arroyo Naranjo", "Cotorro"],
+            "Mayabeque": ["San José de las Lajas", "Bejucal", "Batabanó", "Guivicán", "Madruga", "Melena del Sur", "Nueva Paz", "Quivicán", "San Nicolás", "Santa Cruz del Norte", "Jaruco"],
+            "Matanzas": ["Matanzas", "Cárdenas", "Colón", "Jagüey Grande", "Jovellanos", "Limonar", "Los Arabos", "Martí", "Pedro Betancourt", "Perico", "Unión de Reyes", "Calimete", "Ciénaga de Zapata"],
+            "Villa Clara": ["Santa Clara", "Caibarién", "Camajuaní", "Cifuentes", "Encrucijada", "Manicaragua", "Placetas", "Quemado de Güines", "Ranchuelo", "Remedios", "Sagua la Grande", "Santo Domingo", "Corralillo"],
             "Cienfuegos": ["Cienfuegos", "Abreus", "Aguada de Pasajeros", "Cruces", "Lajas", "Palmira", "Rodas", "Cumanayagua"],
-            "Sancti Spíritus": ["Sancti Spíritus", "Trinidad", "Cabaiguán", "Fomento", "Jatibonico", "La Sierpe", "Taguasco", "Yaguajay"],
-            "Ciego de Ávila": ["Ciego de Ávila", "Morón", "Chambas", "Ciro Redondo", "Florencia", "Majagua", "Venezuela", "Baraguá", "Primero de Enero", "Bolivia"],
-            "Camagüey": ["Camagüey", "Florida", "Nuevitas", "Guáimaro", "Sibanicú", "Esmeralda", "Sierra de Cubitas", "Minas", "Vertientes", "Jimaguayú", "Najasa", "Santa Cruz del Sur", "Carlos Manuel de Cespedes"],
-            "Las Tunas": ["Las Tunas", "Puerto Padre", "Amancio", "Colombia", "Jesús Menéndez", "Jobabo", "Majibacoa", "Manatí"],
-            "Holguín": ["Holguín", "Banes", "Gibara", "Antilla", "Báguanos", "Cacocum", "Calixto García", "Cueto", "Frank País", "Mayarí", "Moa", "Rafael Freyre", "Sagua de Tánamo", "Urbano Noris"],
-            "Granma": ["Bayamo", "Manzanillo", "Jiguaní", "Campechuela", "Media Luna", "Niquero", "Pilón", "Bartolomé Masó", "Buey Arriba", "Guisa", "Cauto Cristo", "Río Cauto", "Yara"],
-            "Santiago de Cuba": ["Santiago de Cuba", "Palma Soriano", "Contramaestre", "Guamá", "Mella", "San Luis", "Segundo Frente", "Songo - La Maya", "Tercer Frente"],
-            "Guantánamo": ["Guantánamo", "Baracoa", "Maisí", "Imías", "San Antonio del Sur", "Manuel Tames", "Yateras", "Caimanera", "El Salvador", "Niceto Pérez"],
-            "Isla de la Juventud": ["Nueva Gerona", "La Fe", "La Demajagua"]
+            "Sancti Spíritus": ["Sancti Spíritus", "Cabaiguán", "Fomento", "Jatibonico", "La Sierpe", "Taguasco", "Trinidad", "Yaguajay"],
+            "Ciego de Ávila": ["Ciego de Ávila", "Baraguá", "Chambas", "Florencia", "Majagua", "Morón", "Primero de Enero", "Venezuela", "Ciro Redondo", "Bolivia"],
+            "Camagüey": ["Camagüey", "Florida", "Guáimaro", "Jimaguayú", "Minas", "Najasa", "Nuevitas", "Santa Cruz del Sur", "Sibanicú", "Sierra de Cubitas", "Vertientes", "Carlos Manuel de Céspedes", "Esmeralda"],
+            "Las Tunas": ["Las Tunas", "Amancio", "Colombia", "Jobabo", "Majibacoa", "Manatí", "Puerto Padre", "Jesús Menéndez"],
+            "Holguín": ["Holguín", "Antilla", "Báguanos", "Banes", "Cacocum", "Calixto García", "Cueto", "Frank País", "Gibara", "Mayarí", "Moa", "Rafael Freyre", "Sagua de Tánamo", "Urbano Noris"],
+            "Granma": ["Bayamo", "Bartolomé Masó", "Buey Arriba", "Campechuela", "Cauto Cristo", "Guisa", "Jiguaní", "Manzanillo", "Media Luna", "Niquero", "Pilón", "Río Cauto", "Yara"],
+            "Santiago de Cuba": ["Santiago de Cuba", "Contramaestre", "Guamá", "Mella", "Palma Soriano", "San Luis", "Segundo Frente", "Songo - La Maya", "Tercer Frente"],
+            "Guantánamo": ["Guantánamo", "Baracoa", "Caimanera", "El Salvador", "Imías", "Maisí", "Manuel Tames", "Niceto Pérez", "San Antonio del Sur", "Yateras"],
+            "Isla de la Juventud": ["Nueva Gerona"]
         };
 
         window.navigateTo = (viewId) => {
@@ -278,19 +276,19 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        window.toggleFilters = () => {
-            const panel = document.getElementById('filter-panel');
-            panel.classList.toggle('hidden-view');
+        window.openNewListingForm = () => {
+            document.getElementById('form-listing').reset();
+            document.getElementById('edit-id').value = "";
+            document.getElementById('form-title').innerText = "Nuevo Inmueble";
+            document.getElementById('submit-btn').innerText = "Guardar Publicación";
+            updateMunicipalities();
+            navigateTo('publish');
         };
 
         const startSync = () => {
             const q = collection(db, 'artifacts', app_id, 'public', 'data', 'listings');
             onSnapshot(q, (snap) => {
-                listingsData = [];
-                snap.forEach(doc => {
-                    listingsData.push({ id: doc.id, ...doc.data() });
-                });
-                listingsData.sort((a, b) => (b.created_at?.seconds || 0) - (a.created_at?.seconds || 0));
+                listingsData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 applyFilters();
                 renderAdminList();
             });
@@ -298,157 +296,138 @@
 
         window.applyFilters = () => {
             const search = document.getElementById('filter-search').value.toLowerCase();
-            const prov = document.getElementById('filter-province').value;
-            const mun = document.getElementById('filter-municipality').value;
-            const rooms = document.getElementById('filter-rooms').value;
-            const pMax = Number(document.getElementById('filter-price-max').value) || Infinity;
+            const province = document.getElementById('filter-province').value;
+            const municipality = document.getElementById('filter-municipality').value;
+            const type = document.getElementById('filter-type').value;
+            const priceMax = document.getElementById('filter-price-max').value;
 
-            const filtered = listingsData.filter(item => {
-                const titleMatch = item.title.toLowerCase().includes(search);
-                const refMatch = (item.ref || "").toLowerCase().includes(search);
-                const provSearchMatch = item.province.toLowerCase().includes(search);
-                const munSearchMatch = item.municipality.toLowerCase().includes(search);
-                
-                const matchesSearch = titleMatch || refMatch || provSearchMatch || munSearchMatch;
-                const matchesProv = !prov || item.province === prov;
-                const matchesMun = !mun || item.municipality === mun;
-                const matchesRooms = !rooms || item.rooms >= Number(rooms);
-                const matchesPrice = item.priceSale <= pMax;
-                
-                return matchesSearch && matchesProv && matchesMun && matchesRooms && matchesPrice;
+            const filtered = listingsData.filter(i => {
+                const matchesSearch = i.title.toLowerCase().includes(search) || (i.ref || "").toLowerCase().includes(search);
+                const matchesProvince = !province || i.province === province;
+                const matchesMunicipality = !municipality || i.municipality === municipality;
+                const matchesType = !type || i.houseType === type;
+                const matchesPrice = !priceMax || i.priceSale <= Number(priceMax);
+                return matchesSearch && matchesProvince && matchesMunicipality && matchesType && matchesPrice;
             });
             
-            const counter = document.getElementById('results-count');
-            counter.innerText = `${filtered.length} inmueble${filtered.length !== 1 ? 's' : ''}`;
-
             const grid = document.getElementById('catalog-grid');
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-12 lg:py-24 text-center text-slate-300 font-bold text-xs lg:text-2xl">Sin resultados.</div>`;
-                return;
-            }
-
-            grid.innerHTML = filtered.map(item => `
-                <div class="bg-white rounded-lg lg:rounded-[1.5rem] overflow-hidden border border-slate-200 card-shadow cursor-pointer hover:translate-y-[-4px] transition-all group" onclick="viewDetails('${item.id}')">
-                    <div class="h-28 lg:h-64 bg-slate-100 relative">
-                        <img src="${item.photos?.[0] || 'https://via.placeholder.com/600x400?text=Inmueble'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        <div class="absolute top-1.5 left-1.5 lg:top-3 lg:left-3 bg-white/90 backdrop-blur-md px-1.5 py-0.5 rounded-md text-[7px] lg:text-xs font-black uppercase tracking-wider">${item.ref || 'S/R'}</div>
-                        <div class="absolute bottom-1.5 right-1.5 lg:bottom-3 lg:right-3 bg-blue-600 text-white px-1.5 lg:px-3 py-1 lg:py-1.5 rounded-md lg:rounded-xl text-[10px] lg:text-base font-bold shadow-lg">$${Number(item.priceSale).toLocaleString()}</div>
+            grid.innerHTML = filtered.map(item => {
+                const hasDiscount = item.priceOriginal && item.priceSale < item.priceOriginal;
+                const discountPercent = hasDiscount ? Math.round(((item.priceOriginal - item.priceSale) / item.priceOriginal) * 100) : 0;
+                
+                return `
+                <div class="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm cursor-pointer relative" onclick="viewDetails('${item.id}')">
+                    ${hasDiscount ? `
+                    <div class="absolute top-2 left-2 bg-red-500 text-white text-[8px] font-black px-2 py-1 rounded-full z-10">
+                        -${discountPercent}%
                     </div>
-                    <div class="p-2.5 lg:p-6">
-                        <h3 class="card-title font-bold text-slate-800 text-[11px] lg:text-xl line-clamp-1 mb-0.5">${item.title}</h3>
-                        <p class="text-[7px] lg:text-sm font-bold text-slate-400 uppercase tracking-widest mb-2 lg:mb-4">${item.province}</p>
-                        <div class="flex items-center gap-2 lg:gap-4 border-t border-slate-50 pt-2 lg:pt-4">
-                            <div class="flex items-center gap-1 text-slate-500 text-[9px] lg:text-base">
-                                <span class="font-bold">${item.rooms}h</span>
-                            </div>
-                            <div class="flex items-center gap-1 text-slate-500 text-[9px] lg:text-base">
-                                <span class="font-bold">${item.bathrooms}b</span>
-                            </div>
+                    ` : ''}
+                    <div class="aspect-video bg-slate-100">
+                        <img src="${item.photos?.[0] || 'https://via.placeholder.com/400x300?text=Sin+Foto'}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-3">
+                        <div class="flex justify-between items-start gap-1">
+                            <h3 class="font-bold text-[10px] lg:text-sm line-clamp-1 flex-1">${item.title}</h3>
+                            <span class="text-[8px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500 font-bold">${item.houseType || 'Casa'}</span>
                         </div>
+                        <div class="flex items-baseline gap-2 mt-1">
+                            <p class="text-blue-600 font-black text-xs lg:text-base">$${Number(item.priceSale).toLocaleString()}</p>
+                            ${hasDiscount ? `<p class="text-slate-400 line-through text-[8px] lg:text-[10px]">$${Number(item.priceOriginal).toLocaleString()}</p>` : ''}
+                        </div>
+                        <p class="text-slate-400 text-[8px] uppercase font-bold mt-1 line-clamp-1">${item.province}, ${item.municipality}</p>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         };
 
         window.toggleDesc = (btn) => {
             const container = btn.previousElementSibling;
-            const isExpanded = container.classList.contains('description-truncated');
-            if (isExpanded) {
-                container.classList.remove('description-truncated');
-                btn.innerText = 'Ver menos';
-            } else {
-                container.classList.add('description-truncated');
-                btn.innerText = 'Ver más';
-            }
+            const isTruncated = container.classList.toggle('description-truncated');
+            btn.innerText = isTruncated ? 'Ver más' : 'Ver menos';
         };
 
         window.viewDetails = (id) => {
             const item = listingsData.find(i => i.id === id);
             if(!item) return;
 
-            const waMessage = encodeURIComponent(`Hola, me interesa: "${item.title}" (Ref: ${item.ref || 'N/A'}).`);
-            const waLink = `https://wa.me/${item.contactPhone}?text=${waMessage}`;
-
-            const content = `
-                <div class="mb-3 lg:mb-8">
-                    <button onclick="navigateTo('catalog')" class="flex items-center gap-1.5 font-bold text-slate-400 hover:text-slate-900 transition text-[10px] lg:text-base">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
-                        Catálogo
-                    </button>
-                </div>
-                
-                <div class="bg-white rounded-xl lg:rounded-[2.5rem] border border-slate-200 shadow-xl overflow-hidden mb-6 lg:mb-10">
-                    <div class="p-3 lg:p-12">
-                        <div class="flex flex-col lg:flex-row gap-3 lg:gap-12">
-                            <div class="lg:w-1/2 space-y-2 lg:space-y-4">
-                                <div class="rounded-lg lg:rounded-[2rem] overflow-hidden bg-slate-100 aspect-[4/3] shadow-inner">
-                                    <img src="${item.photos?.[0] || ''}" class="w-full h-full object-cover" id="main-detail-img">
-                                </div>
-                                <div class="gallery-grid">
-                                    ${(item.photos || []).map(p => `
-                                        <div class="aspect-square rounded-md lg:rounded-lg overflow-hidden bg-slate-100 border border-transparent">
-                                            <img src="${p}" class="w-full h-full object-cover cursor-pointer" onclick="document.getElementById('main-detail-img').src = this.src">
-                                        </div>
-                                    `).join('')}
+            document.getElementById('details-content').innerHTML = `
+                <button onclick="navigateTo('catalog')" class="mb-4 text-[10px] font-bold text-slate-400 flex items-center gap-1 uppercase tracking-tighter">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Volver al catálogo
+                </button>
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-lg">
+                    <div class="grid lg:grid-cols-2">
+                        <div class="p-4 lg:p-8 space-y-4">
+                            <img src="${item.photos?.[0] || 'https://via.placeholder.com/400x300'}" class="w-full aspect-[4/3] object-cover rounded-xl shadow-inner" id="main-img">
+                            <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                                ${item.photos?.map(p => `<img src="${p}" onclick="document.getElementById('main-img').src=this.src" class="w-12 h-12 lg:w-16 lg:h-16 rounded-lg object-cover cursor-pointer border hover:border-blue-500 transition-colors">`).join('')}
+                            </div>
+                        </div>
+                        <div class="p-4 lg:p-10 flex flex-col">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-[9px] font-black bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full uppercase">${item.houseType}</span>
+                                <span class="text-slate-400 text-[9px] font-bold">REF: ${item.ref || '-'}</span>
+                            </div>
+                            <h1 class="text-detail-title font-extrabold text-slate-900 mb-1">${item.title}</h1>
+                            <p class="text-[9px] lg:text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">${item.province}, ${item.municipality}</p>
+                            
+                            <div class="bg-blue-50 p-4 rounded-xl mb-6">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-detail-price font-black text-blue-600">$${Number(item.priceSale).toLocaleString()}</span>
+                                    ${item.priceOriginal && item.priceSale < item.priceOriginal ? `<span class="text-slate-400 line-through text-xs">$${Number(item.priceOriginal).toLocaleString()}</span>` : ''}
                                 </div>
                             </div>
 
-                            <div class="lg:w-1/2 flex flex-col">
-                                <div class="mb-3 lg:mb-6">
-                                    <h1 class="text-detail-title text-base lg:text-4xl font-extrabold text-slate-900 leading-tight mb-0.5">${item.title}</h1>
-                                    <p class="text-[9px] lg:text-base font-bold text-slate-400 uppercase tracking-widest">${item.province}, ${item.municipality}</p>
+                            <div class="grid grid-cols-3 gap-2 mb-6">
+                                <div class="bg-slate-50 p-2 rounded-lg text-center border">
+                                    <p class="text-[8px] font-bold text-slate-400 uppercase">Habs</p>
+                                    <p class="font-bold text-xs">${item.rooms}</p>
                                 </div>
-
-                                <div class="bg-blue-50 p-3 lg:p-6 rounded-lg lg:rounded-2xl mb-3 lg:mb-6">
-                                    <p class="text-detail-price text-xl lg:text-4xl font-black text-blue-600">$${Number(item.priceSale).toLocaleString()}</p>
-                                    <p class="text-[9px] lg:text-sm font-bold text-slate-400 line-through">Tasa: $${Number(item.priceOriginal).toLocaleString()}</p>
+                                <div class="bg-slate-50 p-2 rounded-lg text-center border">
+                                    <p class="text-[8px] font-bold text-slate-400 uppercase">Baños</p>
+                                    <p class="font-bold text-xs">${item.bathrooms || '-'}</p>
                                 </div>
-
-                                <div class="grid grid-cols-3 gap-1.5 lg:gap-3 mb-3 lg:mb-6">
-                                    <div class="bg-slate-50 p-1.5 lg:p-4 rounded-lg border border-slate-100 text-center">
-                                        <p class="text-[7px] lg:text-[8px] font-bold text-slate-400 uppercase tracking-wider">Hab</p>
-                                        <p class="text-xs lg:text-xl font-extrabold text-slate-800">${item.rooms}</p>
-                                    </div>
-                                    <div class="bg-slate-50 p-1.5 lg:p-4 rounded-lg border border-slate-100 text-center">
-                                        <p class="text-[7px] lg:text-[8px] font-bold text-slate-400 uppercase tracking-wider">Baños</p>
-                                        <p class="text-xs lg:text-xl font-extrabold text-slate-800">${item.bathrooms}</p>
-                                    </div>
-                                    <div class="bg-slate-50 p-1.5 lg:p-4 rounded-lg border border-slate-100 text-center">
-                                        <p class="text-[7px] lg:text-[8px] font-bold text-slate-400 uppercase tracking-wider">Ref</p>
-                                        <p class="text-xs lg:text-xl font-extrabold text-slate-800">${item.ref || '-'}</p>
-                                    </div>
+                                <div class="bg-slate-50 p-2 rounded-lg text-center border">
+                                    <p class="text-[8px] font-bold text-slate-400 uppercase">Área</p>
+                                    <p class="font-bold text-xs">${item.size || '-'} m²</p>
                                 </div>
-
-                                <div class="bg-slate-50 p-3 lg:p-8 rounded-lg lg:rounded-2xl mb-4 lg:mb-8 flex-1">
-                                    <h3 class="font-bold text-slate-900 mb-1 lg:mb-2 text-[9px] lg:text-sm uppercase tracking-widest">Información:</h3>
-                                    <div class="text-detail-desc text-xs lg:text-lg text-slate-600 leading-relaxed whitespace-pre-line description-truncated">
-                                        ${item.description}
-                                    </div>
-                                    <button onclick="toggleDesc(this)" class="mt-2 text-blue-600 font-bold text-[10px] lg:text-sm">Ver más</button>
-                                </div>
-
-                                <a href="${waLink}" target="_blank" class="w-full bg-[#25D366] text-white text-center py-2.5 lg:py-5 rounded-lg lg:rounded-2xl font-bold text-sm lg:text-lg hover:brightness-105 transition shadow-lg flex items-center justify-center gap-2">
-                                    WhatsApp
-                                </a>
                             </div>
+
+                            <div class="flex-1 mb-6">
+                                <p class="text-[9px] font-bold text-slate-400 uppercase mb-2">Descripción</p>
+                                <div class="text-detail-desc text-slate-600 description-truncated whitespace-pre-line">${item.description}</div>
+                                <button onclick="toggleDesc(this)" class="text-blue-600 font-bold text-[10px] mt-1">Ver más</button>
+                            </div>
+
+                            <a href="https://wa.me/${item.contactPhone}" target="_blank" class="bg-[#25D366] text-white py-3 rounded-xl font-bold text-center text-sm shadow-md hover:bg-[#1eb954] transition-colors flex items-center justify-center gap-2">
+                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.187-2.59-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.46-.217h.332c.106 0 .249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.173.088.274.072.376-.043.101-.116.433-.506.548-.68.116-.173.231-.144.39-.087.158.058 1.01.477 1.184.564.174.087.289.13.332.202.045.072.045.419-.099.824z"/></svg>
+                                Contactar Dueño
+                            </a>
                         </div>
                     </div>
                 </div>
             `;
-            document.getElementById('details-content').innerHTML = content;
             navigateTo('details');
         };
 
         window.renderAdminList = () => {
-            const q = document.getElementById('admin-search').value.toLowerCase();
-            const filtered = listingsData.filter(i => i.title.toLowerCase().includes(q) || (i.ref || "").toLowerCase().includes(q));
-            document.getElementById('admin-list').innerHTML = filtered.map(item => `
+            const list = document.getElementById('admin-list');
+            const search = document.getElementById('admin-search').value.toLowerCase();
+            const filtered = listingsData.filter(i => 
+                i.title.toLowerCase().includes(search) || 
+                (i.ref || "").toLowerCase().includes(search) ||
+                (i.ownerName || "").toLowerCase().includes(search)
+            );
+
+            list.innerHTML = filtered.map(item => `
                 <tr>
-                    <td class="px-3 py-2 lg:px-6 lg:py-4 font-mono text-[9px] lg:text-xs font-bold text-blue-600">${item.ref || 'S/R'}</td>
-                    <td class="px-3 py-2 lg:px-6 lg:py-4 font-bold text-slate-700 text-[10px] lg:text-base">${item.title}</td>
-                    <td class="px-3 py-2 lg:px-6 lg:py-4 text-right space-x-1 lg:space-x-2">
-                        <button onclick="editListing('${item.id}')" class="text-blue-600 font-bold text-[9px] lg:text-sm px-1">Editar</button>
-                        <button onclick="openDeleteModal('${item.id}')" class="text-red-500 font-bold text-[9px] lg:text-sm px-1">Borrar</button>
+                    <td class="px-4 py-3 font-mono font-bold text-blue-600">${item.ref || 'S/R'}</td>
+                    <td class="px-4 py-3">
+                        <p class="font-bold line-clamp-1">${item.title}</p>
+                        <p class="text-[9px] text-slate-400 uppercase">${item.ownerName || 'Sin nombre'}</p>
+                    </td>
+                    <td class="px-4 py-3 text-right space-x-3">
+                        <button onclick="editListing('${item.id}')" class="text-blue-600 font-bold hover:underline">Editar</button>
+                        <button onclick="openDeleteModal('${item.id}')" class="text-red-500 font-bold hover:underline">Borrar</button>
                     </td>
                 </tr>
             `).join('');
@@ -458,54 +437,55 @@
             const item = listingsData.find(l => l.id === id);
             if(!item) return;
             document.getElementById('edit-id').value = id;
-            document.getElementById('form-title').innerText = "Editar";
-            document.getElementById('submit-btn').innerText = "Actualizar";
+            document.getElementById('form-title').innerText = "Editar Inmueble";
             document.getElementById('ref-number').value = item.ref || "";
             document.getElementById('title').value = item.title;
-            document.getElementById('property-type').value = item.propertyType;
-            document.getElementById('rooms').value = item.rooms;
-            document.getElementById('bathrooms').value = item.bathrooms;
-            document.getElementById('price-original').value = item.priceOriginal;
+            document.getElementById('price-original').value = item.priceOriginal || item.priceSale;
             document.getElementById('price-sale').value = item.priceSale;
             document.getElementById('province').value = item.province;
             updateMunicipalities();
             document.getElementById('municipality').value = item.municipality;
-            document.getElementById('contact-name').value = item.contactName;
-            document.getElementById('contact-phone').value = item.contactPhone;
+            document.getElementById('rooms').value = item.rooms;
+            document.getElementById('bathrooms').value = item.bathrooms || 1;
+            document.getElementById('size').value = item.size || "";
+            document.getElementById('house-type').value = item.houseType || "Casa";
+            document.getElementById('owner-name').value = item.ownerName || "";
             document.getElementById('description').value = item.description;
             document.getElementById('photo-urls').value = (item.photos || []).join('\n');
+            document.getElementById('contact-phone').value = item.contactPhone;
             navigateTo('publish');
         };
 
         document.getElementById('form-listing').onsubmit = async (e) => {
             e.preventDefault();
-            const editId = document.getElementById('edit-id').value;
-            const payload = {
+            const id = document.getElementById('edit-id').value;
+            const data = {
                 ref: document.getElementById('ref-number').value,
                 title: document.getElementById('title').value,
-                propertyType: document.getElementById('property-type').value,
-                rooms: Number(document.getElementById('rooms').value),
-                bathrooms: Number(document.getElementById('bathrooms').value),
                 priceOriginal: Number(document.getElementById('price-original').value),
                 priceSale: Number(document.getElementById('price-sale').value),
                 province: document.getElementById('province').value,
                 municipality: document.getElementById('municipality').value,
-                contactName: document.getElementById('contact-name').value,
-                contactPhone: document.getElementById('contact-phone').value,
+                rooms: Number(document.getElementById('rooms').value),
+                bathrooms: Number(document.getElementById('bathrooms').value),
+                size: Number(document.getElementById('size').value),
+                houseType: document.getElementById('house-type').value,
+                ownerName: document.getElementById('owner-name').value,
                 description: document.getElementById('description').value,
-                photos: document.getElementById('photo-urls').value.split('\n').filter(u => u.trim() !== ""),
+                photos: document.getElementById('photo-urls').value.split('\n').filter(u => u.trim()),
+                contactPhone: document.getElementById('contact-phone').value,
                 updated_at: serverTimestamp()
             };
+
             try {
-                if(editId) {
-                    await updateDoc(doc(db, 'artifacts', app_id, 'public', 'data', 'listings', editId), payload);
-                } else {
-                    payload.created_at = serverTimestamp();
-                    await addDoc(collection(db, 'artifacts', app_id, 'public', 'data', 'listings'), payload);
+                if(id) await updateDoc(doc(db, 'artifacts', app_id, 'public', 'data', 'listings', id), data);
+                else {
+                    data.created_at = serverTimestamp();
+                    await addDoc(collection(db, 'artifacts', app_id, 'public', 'data', 'listings'), data);
                 }
-                showToast("Éxito");
+                showToast("Guardado correctamente");
                 navigateTo('admin-panel');
-            } catch (err) { showToast("Error"); }
+            } catch (e) { showToast("Error al guardar"); }
         };
 
         document.getElementById('form-login').onsubmit = (e) => {
@@ -515,8 +495,7 @@
                 document.getElementById('btn-logout').classList.remove('hidden-view');
                 document.getElementById('admin-nav').classList.remove('hidden-view');
                 navigateTo('admin-panel');
-                showToast("Bienvenido");
-            } else { showToast("Error"); }
+            } else showToast("Credenciales inválidas");
         };
 
         window.logout = () => {
@@ -528,13 +507,12 @@
 
         window.handlePublishAuth = () => isAdminLoggedIn ? navigateTo('admin-panel') : navigateTo('login');
         window.openDeleteModal = (id) => { deleteTargetId = id; document.getElementById('delete-modal').classList.remove('hidden-view'); };
-        window.closeDeleteModal = () => { deleteTargetId = null; document.getElementById('delete-modal').classList.add('hidden-view'); };
+        window.closeDeleteModal = () => document.getElementById('delete-modal').classList.add('hidden-view');
 
         document.getElementById('confirm-delete-btn').onclick = async () => {
-            if(!deleteTargetId) return;
             await deleteDoc(doc(db, 'artifacts', app_id, 'public', 'data', 'listings', deleteTargetId));
             closeDeleteModal();
-            showToast("Eliminado");
+            showToast("Inmueble eliminado");
         };
 
         function showToast(m) {
@@ -551,18 +529,18 @@
 
         window.updateFilterMunicipalities = () => {
             const prov = document.getElementById('filter-province').value;
-            document.getElementById('filter-municipality').innerHTML = '<option value="">Mun</option>' + (cubaData[prov] || []).map(m => `<option value="${m}">${m}</option>`).join('');
+            document.getElementById('filter-municipality').innerHTML = '<option value="">Todos</option>' + (cubaData[prov] || []).map(m => `<option value="${m}">${m}</option>`).join('');
             applyFilters();
         };
 
-        const init = async () => {
-            const provs = Object.keys(cubaData).sort();
-            document.getElementById('province').innerHTML = provs.map(p => `<option value="${p}">${p}</option>`).join('');
-            document.getElementById('filter-province').innerHTML = '<option value="">Prov</option>' + provs.map(p => `<option value="${p}">${p}</option>`).join('');
-            updateMunicipalities();
-            onAuthStateChanged(auth, async (u) => { u ? startSync() : await signInAnonymously(auth); });
-        };
-        init();
+        window.toggleFilters = () => document.getElementById('filter-panel').classList.toggle('hidden-view');
+
+        onAuthStateChanged(auth, async (u) => { u ? startSync() : await signInAnonymously(auth); });
+        
+        const provs = Object.keys(cubaData);
+        document.getElementById('province').innerHTML = provs.map(p => `<option value="${p}">${p}</option>`).join('');
+        document.getElementById('filter-province').innerHTML = '<option value="">Provincia</option>' + provs.map(p => `<option value="${p}">${p}</option>`).join('');
+        updateMunicipalities();
     </script>
 </body>
 </html>
