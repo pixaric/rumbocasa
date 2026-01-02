@@ -46,11 +46,12 @@
                 <span class="text-base lg:text-xl font-extrabold tracking-tight">Rumbo Casa</span>
             </div>
             
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 lg:gap-4">
+                <button onclick="navigateTo('about')" class="text-slate-600 hover:text-blue-600 font-bold text-xs lg:text-sm px-2">Nosotros</button>
                 <div id="admin-nav" class="hidden-view flex items-center gap-4 border-r border-slate-200 pr-4">
                     <button onclick="navigateTo('admin-panel')" class="text-slate-600 hover:text-blue-600 font-bold text-xs lg:text-sm">Gestión</button>
                 </div>
-                <button id="btn-publish-main" onclick="handlePublishAuth()" class="bg-slate-900 text-white px-3 lg:px-5 py-1.5 lg:py-2.5 rounded-lg font-bold text-xs lg:text-sm shadow-md">
+                <button id="btn-publish-main" onclick="handlePublishAuth()" class="bg-slate-900 text-white px-3 lg:px-5 py-1.5 lg:py-2.5 rounded-lg font-bold text-xs lg:text-sm shadow-md whitespace-nowrap">
                     Publicar
                 </button>
                 <button id="btn-logout" onclick="logout()" class="hidden-view text-red-500 p-1">
@@ -65,6 +66,15 @@
         <!-- VISTA: Catálogo Público -->
         <section id="view-catalog" class="view-section">
             <div class="mb-6 lg:mb-10">
+                <!-- Banner de Contacto para publicar -->
+                <a href="https://wa.me/5350000000" target="_blank" class="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-[10px] lg:text-xs font-bold mb-4 hover:bg-green-100 transition-colors border border-green-200">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    ¿Quieres publicar un anuncio? Contacta con el equipo por WhatsApp
+                </a>
+
                 <h1 class="text-2xl lg:text-4xl font-extrabold text-slate-900">Encuentra tu <span class="text-blue-600">Hogar</span></h1>
                 <p class="text-slate-500 text-xs lg:text-lg">Explora las mejores propiedades en Cuba.</p>
             </div>
@@ -110,6 +120,64 @@
             </div>
 
             <div id="catalog-grid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+        </section>
+
+        <!-- VISTA: Quiénes Somos -->
+        <section id="view-about" class="view-section hidden-view">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl lg:text-5xl font-extrabold mb-4">Sobre <span class="text-blue-600">Nosotros</span></h2>
+                    <p class="text-slate-500 lg:text-lg">Tu socio de confianza en el mercado inmobiliario cubano.</p>
+                </div>
+                
+                <div class="grid gap-8">
+                    <div class="bg-white p-6 lg:p-10 rounded-3xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xl font-bold mb-4 text-blue-600">Nuestra Misión</h3>
+                        <p class="text-slate-600 leading-relaxed text-sm lg:text-base mb-6">
+                            En <strong>Rumbo Casa</strong>, nos dedicamos a simplificar la búsqueda y gestión de propiedades en toda Cuba. Nuestra plataforma nace con el objetivo de conectar a propietarios con compradores de manera transparente, segura y eficiente, utilizando herramientas digitales de vanguardia.
+                        </p>
+                        
+                        <h3 class="text-xl font-bold mb-4 text-blue-600">¿Por qué elegirnos?</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3">
+                                <div class="bg-blue-100 p-1 rounded-lg text-blue-600 mt-1">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm lg:text-base">Transparencia Total</h4>
+                                    <p class="text-slate-500 text-xs lg:text-sm">Publicaciones verificadas y contacto directo con los propietarios.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="bg-blue-100 p-1 rounded-lg text-blue-600 mt-1">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm lg:text-base">Gestión Profesional</h4>
+                                    <p class="text-slate-500 text-xs lg:text-sm">Contamos con un equipo dedicado para asesorarte en la publicidad de tu inmueble.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="bg-blue-100 p-1 rounded-lg text-blue-600 mt-1">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm lg:text-base">Alcance Nacional</h4>
+                                    <p class="text-slate-500 text-xs lg:text-sm">Desde Pinar del Río hasta Guantánamo, cubrimos toda la isla.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-900 text-white p-8 rounded-3xl text-center">
+                        <h3 class="text-2xl font-bold mb-4">¿Hablamos?</h3>
+                        <p class="text-slate-400 text-sm mb-6">Si tienes dudas sobre cómo vender o comprar, nuestro equipo está listo para ayudarte.</p>
+                        <a href="https://wa.me/5350000000" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg">
+                            Contactar por WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- VISTA: Detalle -->
@@ -210,7 +278,7 @@
         </section>
     </main>
 
-    <!-- Modals -->
+    <!-- Modals & Toasts -->
     <div id="delete-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-[200] hidden-view">
         <div class="bg-white rounded-2xl p-6 max-w-xs w-full shadow-2xl">
             <h3 class="font-bold text-center mb-4 text-sm">¿Confirmar borrado?</h3>
@@ -227,7 +295,6 @@
         </div>
     </div>
 
-    <!-- Elemento auxiliar para copiar al portapapeles -->
     <textarea id="copy-helper" class="fixed -top-full left-0 opacity-0 pointer-events-none"></textarea>
 
     <script type="module">
@@ -293,7 +360,6 @@
             onSnapshot(q, (snap) => {
                 listingsData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 
-                // Detectar si venimos de un link compartido por URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const sharedId = urlParams.get('id');
                 if (sharedId && listingsData.find(i => i.id === sharedId)) {
@@ -371,17 +437,17 @@
                     <button onclick="navigateTo('catalog')" class="text-[10px] font-bold text-slate-400 flex items-center gap-1 uppercase tracking-tighter">
                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Catálogo
                     </button>
-                    <button onclick="copyShareLink('${item.id}')" class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1.5 hover:bg-blue-100 transition-colors">
+                    <button onclick="copyShareLink('${item.id}')" class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1.5">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                        Copiar Enlace Publicitario
+                        Publicidad
                     </button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-lg">
                     <div class="grid lg:grid-cols-2">
                         <div class="p-4 lg:p-8 space-y-4">
-                            <img src="${item.photos?.[0] || 'https://via.placeholder.com/400x300'}" class="w-full aspect-[4/3] object-cover rounded-xl shadow-inner" id="main-img">
+                            <img src="${item.photos?.[0] || 'https://via.placeholder.com/400x300'}" class="w-full aspect-[4/3] object-cover rounded-xl" id="main-img">
                             <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                                ${item.photos?.map(p => `<img src="${p}" onclick="document.getElementById('main-img').src=this.src" class="w-12 h-12 lg:w-16 lg:h-16 rounded-lg object-cover cursor-pointer border hover:border-blue-500 transition-colors">`).join('')}
+                                ${item.photos?.map(p => `<img src="${p}" onclick="document.getElementById('main-img').src=this.src" class="w-12 h-12 lg:w-16 lg:h-16 rounded-lg object-cover cursor-pointer border hover:border-blue-500">`).join('')}
                             </div>
                         </div>
                         <div class="p-4 lg:p-10 flex flex-col">
@@ -390,15 +456,13 @@
                                 <span class="text-slate-400 text-[9px] font-bold">REF: ${item.ref || '-'}</span>
                             </div>
                             <h1 class="text-detail-title font-extrabold text-slate-900 mb-1">${item.title}</h1>
-                            <p class="text-[9px] lg:text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">${item.province}, ${item.municipality}</p>
-                            
+                            <p class="text-[9px] lg:text-xs font-bold text-slate-400 uppercase mb-4">${item.province}, ${item.municipality}</p>
                             <div class="bg-blue-50 p-4 rounded-xl mb-6">
                                 <div class="flex items-center gap-3">
                                     <span class="text-detail-price font-black text-blue-600">$${Number(item.priceSale).toLocaleString()}</span>
                                     ${item.priceOriginal && item.priceSale < item.priceOriginal ? `<span class="text-slate-400 line-through text-xs">$${Number(item.priceOriginal).toLocaleString()}</span>` : ''}
                                 </div>
                             </div>
-
                             <div class="grid grid-cols-3 gap-2 mb-6">
                                 <div class="bg-slate-50 p-2 rounded-lg text-center border">
                                     <p class="text-[8px] font-bold text-slate-400 uppercase">Habs</p>
@@ -413,14 +477,12 @@
                                     <p class="font-bold text-xs">${item.size || '-'} m²</p>
                                 </div>
                             </div>
-
                             <div class="flex-1 mb-6">
                                 <p class="text-[9px] font-bold text-slate-400 uppercase mb-2">Descripción</p>
                                 <div class="text-detail-desc text-slate-600 description-truncated whitespace-pre-line">${item.description}</div>
                                 <button onclick="window.toggleDesc(this)" class="text-blue-600 font-bold text-[10px] mt-1">Ver más</button>
                             </div>
-
-                            <a href="https://wa.me/${item.contactPhone}" target="_blank" class="bg-[#25D366] text-white py-3 rounded-xl font-bold text-center text-sm shadow-md hover:bg-[#1eb954] transition-colors flex items-center justify-center gap-2">
+                            <a href="https://wa.me/${item.contactPhone}" target="_blank" class="bg-[#25D366] text-white py-3 rounded-xl font-bold text-center text-sm shadow-md flex items-center justify-center gap-2">
                                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.187-2.59-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.46-.217h.332c.106 0 .249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.173.088.274.072.376-.043.101-.116.433-.506.548-.68.116-.173.231-.144.39-.087.158.058 1.01.477 1.184.564.174.087.289.13.332.202.045.072.045.419-.099.824z"/></svg>
                                 Contactar Dueño
                             </a>
