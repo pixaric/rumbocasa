@@ -12,7 +12,6 @@
         .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
         .card-shadow { box-shadow: 0 15px 50px -15px rgba(0, 0, 0, 0.08); }
         
-        /* Animaciones */
         .slide-down { animation: slideDown 0.3s ease-out forwards; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -21,11 +20,19 @@
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             gap: 10px;
         }
 
-        /* Tamaños extra para pantallas muy grandes */
+        /* Ajustes específicos para móviles (Legibilidad) */
+        @media (max-width: 640px) {
+            h1 { font-size: 2.25rem !important; line-height: 2.5rem !important; }
+            .card-title { font-size: 1.25rem !important; }
+            .price-tag { font-size: 1.1rem !important; }
+            input, select, textarea { font-size: 16px !important; } 
+            .btn-mobile-large { padding-top: 1rem !important; padding-bottom: 1rem !important; font-size: 1.1rem !important; }
+        }
+
         @media (min-width: 1536px) {
             .max-w-7xl { max-width: 1600px; }
             body { font-size: 18px; }
@@ -35,116 +42,118 @@
 <body class="bg-slate-50 min-h-screen text-slate-900 transition-all duration-300">
 
     <!-- Navbar -->
-    <nav class="bg-white/90 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-[100] py-1 lg:py-3">
-        <div class="max-w-7xl mx-auto px-6 h-16 lg:h-20 flex justify-between items-center">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('catalog')">
-                <div class="bg-blue-600 p-2.5 lg:p-3 rounded-2xl text-white shadow-xl shadow-blue-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <nav class="bg-white/90 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-[100] py-2 lg:py-3">
+        <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 lg:h-20 flex justify-between items-center">
+            <div class="flex items-center gap-2 lg:gap-3 cursor-pointer" onclick="navigateTo('catalog')">
+                <div class="bg-blue-600 p-2 lg:p-3 rounded-xl lg:2xl text-white shadow-xl shadow-blue-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lg:w-6 lg:h-6"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 </div>
-                <span class="text-xl lg:text-2xl font-extrabold tracking-tight text-slate-900">Rumbo Casa</span>
+                <span class="text-lg lg:text-2xl font-extrabold tracking-tight text-slate-900">Rumbo Casa</span>
             </div>
             
-            <div class="flex items-center gap-5">
-                <div id="admin-nav" class="hidden-view flex items-center gap-6 border-r border-slate-200 pr-5">
-                    <button onclick="resetPublishForm(); navigateTo('publish')" class="text-slate-600 hover:text-blue-600 font-bold text-sm lg:text-base transition">Publicar</button>
-                    <button onclick="navigateTo('admin-panel')" class="text-slate-600 hover:text-blue-600 font-bold text-sm lg:text-base transition">Gestionar</button>
+            <div class="flex items-center gap-3 lg:gap-5">
+                <div id="admin-nav" class="hidden-view flex items-center gap-3 lg:gap-6 border-r border-slate-200 pr-3 lg:pr-5">
+                    <button onclick="navigateTo('admin-panel')" class="text-slate-600 hover:text-blue-600 font-bold text-xs lg:text-base transition">Gestionar</button>
                 </div>
-                <button id="btn-publish-main" onclick="handlePublishAuth()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 lg:py-3 rounded-xl font-bold transition text-sm lg:text-base shadow-lg">
-                    Publicar Inmueble
+                <button id="btn-publish-main" onclick="handlePublishAuth()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 lg:px-6 py-2 lg:py-3 rounded-xl font-bold transition text-xs lg:text-base shadow-lg">
+                    Publicar
                 </button>
-                <button id="btn-logout" onclick="logout()" class="hidden-view text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <button id="btn-logout" onclick="logout()" class="hidden-view text-red-500 hover:bg-red-50 p-2 rounded-xl transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </button>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 py-8 lg:py-12">
+    <main class="max-w-7xl mx-auto px-4 lg:px-6 py-6 lg:py-12">
         
         <!-- VISTA: Catálogo Público -->
         <section id="view-catalog" class="view-section">
-            <div class="mb-8 lg:mb-12">
-                <h1 class="text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">Propiedades en <span class="text-blue-600">Cuba</span></h1>
-                <p class="text-slate-500 mt-3 text-lg lg:text-xl font-medium">Encuentra tu próximo hogar entre las mejores opciones del mercado.</p>
+            <div class="mb-6 lg:mb-12">
+                <h1 class="text-3xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">Propiedades en <span class="text-blue-600">Cuba</span></h1>
+                <p class="text-slate-500 mt-2 lg:mt-3 text-base lg:text-xl font-medium">Encuentra tu próximo hogar hoy mismo.</p>
             </div>
 
-            <!-- Buscador y Filtro Desplegable -->
-            <div class="mb-10 space-y-4 max-w-5xl">
-                <div class="flex gap-3">
+            <!-- Buscador y Filtro -->
+            <div class="mb-8 space-y-3 lg:space-y-4 max-w-5xl">
+                <div class="flex flex-col sm:flex-row gap-3">
                     <div class="relative flex-1">
-                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar por título o número de referencia..." class="w-full pl-12 pr-6 py-4 lg:py-5 rounded-2xl bg-white border border-slate-200 focus:ring-4 focus:ring-blue-100 transition-all outline-none card-shadow text-base lg:text-lg">
-                        <svg class="absolute left-4 top-4 lg:top-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar por título, referencia, municipio o provincia..." class="w-full pl-12 pr-4 py-3.5 lg:py-5 rounded-2xl bg-white border border-slate-200 focus:ring-4 focus:ring-blue-100 transition-all outline-none card-shadow text-base lg:text-lg">
+                        <svg class="absolute left-4 top-3.5 lg:top-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </div>
-                    <button onclick="toggleFilters()" class="bg-white border border-slate-200 px-6 py-4 lg:py-5 rounded-2xl font-bold flex items-center gap-3 hover:bg-slate-50 transition card-shadow text-base lg:text-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                    <button onclick="toggleFilters()" class="bg-white border border-slate-200 px-6 py-3.5 lg:py-5 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-slate-50 transition card-shadow text-base lg:text-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
                         Filtros
                     </button>
                 </div>
 
-                <!-- Panel Filtros -->
-                <div id="filter-panel" class="hidden-view bg-white rounded-3xl p-8 lg:p-10 border border-slate-200 card-shadow slide-down">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="space-y-2">
-                            <label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Provincia</label>
-                            <select id="filter-province" onchange="updateFilterMunicipalities()" class="w-full p-3 lg:p-4 text-base rounded-xl bg-slate-50 border-none outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500"></select>
+                <div id="filter-panel" class="hidden-view bg-white rounded-2xl lg:rounded-3xl p-5 lg:p-10 border border-slate-200 card-shadow slide-down">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                        <div class="space-y-1">
+                            <label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Provincia</label>
+                            <select id="filter-province" onchange="updateFilterMunicipalities()" class="w-full p-3 lg:p-4 text-sm lg:text-base rounded-xl bg-slate-50 border-none ring-1 ring-slate-200"></select>
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Municipio</label>
-                            <select id="filter-municipality" onchange="applyFilters()" class="w-full p-3 lg:p-4 text-base rounded-xl bg-slate-50 border-none outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500"></select>
+                        <div class="space-y-1">
+                            <label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Municipio</label>
+                            <select id="filter-municipality" onchange="applyFilters()" class="w-full p-3 lg:p-4 text-sm lg:text-base rounded-xl bg-slate-50 border-none ring-1 ring-slate-200"></select>
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Habitaciones</label>
-                            <select id="filter-rooms" onchange="applyFilters()" class="w-full p-3 lg:p-4 text-base rounded-xl bg-slate-50 border-none outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500">
+                        <div class="space-y-1">
+                            <label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Habitaciones</label>
+                            <select id="filter-rooms" onchange="applyFilters()" class="w-full p-3 lg:p-4 text-sm lg:text-base rounded-xl bg-slate-50 border-none ring-1 ring-slate-200">
                                 <option value="">Cualquiera</option>
-                                <option value="1">1 o más</option><option value="2">2 o más</option><option value="3">3 o más</option>
+                                <option value="1">1+</option><option value="2">2+</option><option value="3">3+</option>
                             </select>
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Máx (USD)</label>
-                            <input type="number" id="filter-price-max" oninput="applyFilters()" placeholder="Ej: 50000" class="w-full p-3 lg:p-4 text-base rounded-xl bg-slate-50 ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <div class="space-y-1">
+                            <label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Máx</label>
+                            <input type="number" id="filter-price-max" oninput="applyFilters()" placeholder="Ej: 50000" class="w-full p-3 lg:p-4 text-sm lg:text-base rounded-xl bg-slate-50 ring-1 ring-slate-200 outline-none">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <!-- Los anuncios se cargan aquí -->
+            <!-- Contador de resultados -->
+            <div id="results-counter" class="mb-6 flex items-center gap-2">
+                <span class="bg-slate-200 text-slate-600 px-3 py-1 rounded-full text-xs lg:text-sm font-bold" id="results-count">0 inmuebles</span>
+                <span class="text-slate-400 text-xs lg:text-sm font-medium" id="results-label">encontrados según tus criterios</span>
             </div>
+
+            <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8"></div>
         </section>
 
-        <!-- VISTA: Detalle de Propiedad -->
+        <!-- VISTA: Detalle -->
         <section id="view-details" class="view-section hidden-view">
             <div id="details-content" class="max-w-6xl mx-auto"></div>
         </section>
 
         <!-- VISTAS DE ADMINISTRACIÓN -->
         <section id="view-login" class="view-section hidden-view">
-            <div class="max-w-md mx-auto mt-20 bg-white rounded-[2rem] p-10 border border-slate-200 shadow-2xl">
-                <h2 class="text-2xl font-bold mb-8 text-center">Acceso Administrativo</h2>
-                <form id="form-login" class="space-y-6">
-                    <input type="text" id="login-user" placeholder="Usuario" class="w-full p-4 rounded-xl bg-slate-50 outline-none border border-slate-200 text-base">
-                    <input type="password" id="login-pass" placeholder="Contraseña" class="w-full p-4 rounded-xl bg-slate-50 outline-none border border-slate-200 text-base">
-                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl text-lg shadow-lg hover:bg-blue-700 transition">Iniciar Sesión</button>
-                    <button type="button" onclick="navigateTo('catalog')" class="w-full text-slate-400 font-bold py-2 text-sm uppercase tracking-widest">Volver al inicio</button>
+            <div class="max-w-md mx-auto mt-10 lg:mt-20 bg-white rounded-3xl p-8 lg:p-10 border border-slate-200 shadow-2xl">
+                <h2 class="text-xl lg:text-2xl font-bold mb-6 text-center">Acceso Administrador</h2>
+                <form id="form-login" class="space-y-4 lg:space-y-6">
+                    <input type="text" id="login-user" placeholder="Usuario" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <input type="password" id="login-pass" placeholder="Contraseña" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl text-lg shadow-lg">Entrar</button>
+                    <button type="button" onclick="navigateTo('catalog')" class="w-full text-slate-400 font-bold py-2 text-xs uppercase tracking-widest">Cerrar</button>
                 </form>
             </div>
         </section>
 
         <section id="view-admin-panel" class="view-section hidden-view">
-            <div class="flex justify-between items-center mb-10">
-                <h2 class="text-3xl font-bold">Gestión de Anuncios</h2>
-                <div class="relative">
-                    <input type="text" id="admin-search" oninput="renderAdminList()" placeholder="Buscar inmueble..." class="pl-10 p-3 lg:p-4 border rounded-2xl w-64 lg:w-96 outline-none border-slate-200 text-base card-shadow">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 lg:mb-10">
+                <h2 class="text-2xl lg:text-3xl font-bold">Gestión de Anuncios</h2>
+                <div class="relative w-full sm:w-auto">
+                    <input type="text" id="admin-search" oninput="renderAdminList()" placeholder="Buscar..." class="w-full pl-10 p-3 lg:p-4 border rounded-2xl outline-none border-slate-200 text-base">
                     <svg class="absolute left-3 top-3.5 lg:top-4.5 text-slate-300" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 </div>
             </div>
-            <div class="bg-white rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm">
-                <table class="w-full text-left text-base">
+            <div class="bg-white rounded-2xl lg:rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm overflow-x-auto">
+                <table class="w-full text-left text-sm lg:text-base min-w-[600px]">
                     <thead class="bg-slate-50 border-b border-slate-200">
                         <tr>
-                            <th class="px-8 py-5 text-xs font-extrabold text-slate-400 uppercase tracking-widest">Referencia</th>
-                            <th class="px-8 py-5 text-xs font-extrabold text-slate-400 uppercase tracking-widest">Título de la Propiedad</th>
-                            <th class="px-8 py-5 text-xs font-extrabold text-slate-400 uppercase tracking-widest text-right">Acciones</th>
+                            <th class="px-6 py-4 text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase">Ref</th>
+                            <th class="px-6 py-4 text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase">Título</th>
+                            <th class="px-6 py-4 text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase text-right">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="admin-list" class="divide-y divide-slate-100"></tbody>
@@ -153,33 +162,33 @@
         </section>
 
         <section id="view-publish" class="view-section hidden-view">
-            <div class="max-w-4xl mx-auto bg-white rounded-[2.5rem] p-10 lg:p-14 border border-slate-200 shadow-2xl">
-                <div class="flex items-center gap-5 mb-10">
-                    <button onclick="navigateTo('admin-panel')" class="p-3 bg-slate-100 rounded-2xl hover:bg-slate-200 transition">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+            <div class="max-w-4xl mx-auto bg-white rounded-3xl lg:rounded-[2.5rem] p-6 lg:p-14 border border-slate-200 shadow-2xl">
+                <div class="flex items-center gap-4 mb-6 lg:mb-10">
+                    <button onclick="navigateTo('admin-panel')" class="p-2 lg:p-3 bg-slate-100 rounded-xl">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
                     </button>
-                    <h2 id="form-title" class="text-2xl lg:text-3xl font-extrabold">Publicar Propiedad</h2>
+                    <h2 id="form-title" class="text-xl lg:text-3xl font-extrabold">Publicar Propiedad</h2>
                 </div>
-                <form id="form-listing" class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                <form id="form-listing" class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-8">
                     <input type="hidden" id="edit-id">
-                    <div class="md:col-span-1"><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Ref. Catastral / Interna</label><input type="text" id="ref-number" required class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200 focus:ring-2 focus:ring-blue-500"></div>
-                    <div class="md:col-span-1"><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Título Publicitario</label><input type="text" id="title" required class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200 focus:ring-2 focus:ring-blue-500"></div>
-                    <div><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Tipo de Inmueble</label><select id="property-type" class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"><option>Casa Independiente</option><option>Apartamento</option><option>Biplanta</option><option>Finca</option><option>Terreno</option></select></div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Habitaciones</label><input type="number" id="rooms" required class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"></div>
-                        <div><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Baños</label><input type="number" id="bathrooms" required class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"></div>
+                    <div class="md:col-span-1"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Referencia</label><input type="text" id="ref-number" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
+                    <div class="md:col-span-1"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Título</label><input type="text" id="title" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
+                    <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Tipo</label><select id="property-type" class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"><option>Casa Independiente</option><option>Apartamento</option><option>Biplanta</option><option>Finca</option></select></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Habitaciones</label><input type="number" id="rooms" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
+                        <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Baños</label><input type="number" id="bathrooms" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
                     </div>
-                    <div><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio de Venta (USD)</label><input type="number" id="price-sale" required class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"></div>
-                    <div><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Tasación (USD)</label><input type="number" id="price-original" required class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"></div>
-                    <div><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Provincia</label><select id="province" onchange="updateMunicipalities()" class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"></select></div>
-                    <div><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Municipio</label><select id="municipality" class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"></select></div>
-                    <div class="md:col-span-2"><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Galería de Imágenes (URLs, una por línea)</label><textarea id="photo-urls" rows="4" required class="w-full p-4 bg-slate-50 rounded-xl outline-none font-mono text-sm border border-slate-200" placeholder="https://ejemplo.com/foto1.jpg"></textarea></div>
-                    <div class="md:col-span-2"><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Descripción Detallada</label><textarea id="description" rows="5" required class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"></textarea></div>
-                    <div class="md:col-span-1"><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Nombre de Contacto</label><input type="text" id="contact-name" required class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"></div>
-                    <div class="md:col-span-1"><label class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">WhatsApp (Con código de país)</label><input type="tel" id="contact-phone" required class="w-full p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200" placeholder="5312345678"></div>
-                    <div class="md:col-span-2 flex gap-5 pt-8 border-t">
-                        <button type="button" onclick="navigateTo('admin-panel')" class="px-8 py-4 border-2 border-slate-200 rounded-2xl font-bold text-base hover:bg-slate-50">Cancelar</button>
-                        <button type="submit" id="submit-btn" class="flex-1 bg-blue-600 text-white font-bold py-4 rounded-2xl text-lg shadow-xl hover:bg-blue-700 transition">Guardar Publicación</button>
+                    <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Venta (USD)</label><input type="number" id="price-sale" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
+                    <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Tasación (USD)</label><input type="number" id="price-original" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
+                    <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Provincia</label><select id="province" onchange="updateMunicipalities()" class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></select></div>
+                    <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Municipio</label><select id="municipality" class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></select></div>
+                    <div class="md:col-span-2"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Fotos (URLs, una por línea)</label><textarea id="photo-urls" rows="3" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none font-mono text-sm border border-slate-200"></textarea></div>
+                    <div class="md:col-span-2"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Descripción</label><textarea id="description" rows="4" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"></textarea></div>
+                    <div class="md:col-span-1"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Nombre Contacto</label><input type="text" id="contact-name" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
+                    <div class="md:col-span-1"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">WhatsApp</label><input type="tel" id="contact-phone" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200" placeholder="5312345678"></div>
+                    <div class="md:col-span-2 flex gap-4 pt-6 border-t">
+                        <button type="button" onclick="navigateTo('admin-panel')" class="px-6 py-4 border-2 border-slate-100 rounded-xl font-bold text-sm lg:text-base">Cancelar</button>
+                        <button type="submit" id="submit-btn" class="flex-1 bg-blue-600 text-white font-bold py-4 rounded-xl text-base lg:text-lg shadow-xl">Guardar</button>
                     </div>
                 </form>
             </div>
@@ -187,21 +196,20 @@
     </main>
 
     <!-- Modal Borrado -->
-    <div id="delete-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-6 z-[200] hidden-view">
-        <div class="bg-white rounded-[2rem] p-10 max-w-md w-full shadow-2xl scale-100 transition-transform">
-            <h3 class="text-2xl font-bold mb-6 text-center">¿Confirmas la eliminación permanente?</h3>
-            <p class="text-slate-500 text-center mb-8">Esta acción no se puede deshacer y el anuncio desaparecerá del catálogo.</p>
-            <div class="flex gap-4">
-                <button onclick="closeDeleteModal()" class="flex-1 py-4 border-2 border-slate-100 rounded-xl font-bold text-base">No, mantener</button>
-                <button id="confirm-delete-btn" class="flex-1 py-4 bg-red-600 text-white rounded-xl font-bold text-base shadow-lg shadow-red-200">Sí, eliminar</button>
+    <div id="delete-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 z-[200] hidden-view">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl">
+            <h3 class="text-xl font-bold mb-4 text-center">¿Eliminar anuncio?</h3>
+            <p class="text-slate-500 text-center mb-6 text-sm">Esta acción es permanente y no se puede deshacer.</p>
+            <div class="flex gap-3">
+                <button onclick="closeDeleteModal()" class="flex-1 py-3 border-2 border-slate-50 rounded-xl font-bold">No</button>
+                <button id="confirm-delete-btn" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold">Eliminar</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast de Notificaciones -->
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[300] transform translate-y-32 opacity-0 transition-all duration-500">
-        <div id="toast-body" class="bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl font-bold text-sm lg:text-base flex items-center gap-3">
-            <div class="bg-green-500 rounded-full p-1"><svg width="16" height="16" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></svg></div>
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-6 lg:bottom-10 left-1/2 -translate-x-1/2 z-[300] transform translate-y-32 opacity-0 transition-all duration-500">
+        <div id="toast-body" class="bg-slate-900 text-white px-6 py-3.5 rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-3">
             <span id="toast-text"></span>
         </div>
     </div>
@@ -209,7 +217,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAuwoZBV8lKsbOBeLiLc3qSHY6jaxEqnmM",
@@ -248,7 +256,6 @@
             "Isla de la Juventud": ["Nueva Gerona", "La Fe", "La Demajagua"]
         };
 
-        // Navegación
         window.navigateTo = (viewId) => {
             document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden-view'));
             const target = document.getElementById(`view-${viewId}`);
@@ -261,7 +268,6 @@
             panel.classList.toggle('hidden-view');
         };
 
-        // Sincronización Realtime
         const startSync = () => {
             const q = collection(db, 'artifacts', app_id, 'public', 'data', 'listings');
             onSnapshot(q, (snap) => {
@@ -275,7 +281,6 @@
             });
         };
 
-        // Renderizado Catálogo Público
         window.applyFilters = () => {
             const search = document.getElementById('filter-search').value.toLowerCase();
             const prov = document.getElementById('filter-province').value;
@@ -284,38 +289,46 @@
             const pMax = Number(document.getElementById('filter-price-max').value) || Infinity;
 
             const filtered = listingsData.filter(item => {
-                const matchesSearch = item.title.toLowerCase().includes(search) || (item.ref || "").toLowerCase().includes(search);
+                const titleMatch = item.title.toLowerCase().includes(search);
+                const refMatch = (item.ref || "").toLowerCase().includes(search);
+                const provSearchMatch = item.province.toLowerCase().includes(search);
+                const munSearchMatch = item.municipality.toLowerCase().includes(search);
+                
+                const matchesSearch = titleMatch || refMatch || provSearchMatch || munSearchMatch;
                 const matchesProv = !prov || item.province === prov;
                 const matchesMun = !mun || item.municipality === mun;
                 const matchesRooms = !rooms || item.rooms >= Number(rooms);
                 const matchesPrice = item.priceSale <= pMax;
+                
                 return matchesSearch && matchesProv && matchesMun && matchesRooms && matchesPrice;
             });
             
+            // Actualizar contador
+            const counter = document.getElementById('results-count');
+            counter.innerText = `${filtered.length} inmueble${filtered.length !== 1 ? 's' : ''}`;
+
             const grid = document.getElementById('catalog-grid');
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-24 text-center text-slate-300 font-bold text-xl lg:text-2xl">No hay propiedades que coincidan con la búsqueda.</div>`;
+                grid.innerHTML = `<div class="col-span-full py-12 lg:py-24 text-center text-slate-300 font-bold text-lg lg:text-2xl">Sin resultados.</div>`;
                 return;
             }
 
             grid.innerHTML = filtered.map(item => `
-                <div class="bg-white rounded-[1.5rem] overflow-hidden border border-slate-200 card-shadow cursor-pointer hover:translate-y-[-8px] transition-all duration-300 group" onclick="viewDetails('${item.id}')">
-                    <div class="h-56 lg:h-64 bg-slate-100 relative">
-                        <img src="${item.photos?.[0] || 'https://via.placeholder.com/600x400?text=Sin+Imagen'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
-                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] lg:text-xs font-black tracking-wider uppercase">${item.ref || 'S/R'}</div>
-                        <div class="absolute bottom-4 right-4 bg-blue-600 text-white px-4 py-1.5 rounded-xl text-sm lg:text-base font-bold shadow-lg">$${Number(item.priceSale).toLocaleString()}</div>
+                <div class="bg-white rounded-2xl lg:rounded-[1.5rem] overflow-hidden border border-slate-200 card-shadow cursor-pointer hover:translate-y-[-4px] lg:hover:translate-y-[-8px] transition-all group" onclick="viewDetails('${item.id}')">
+                    <div class="h-48 lg:h-64 bg-slate-100 relative">
+                        <img src="${item.photos?.[0] || 'https://via.placeholder.com/600x400?text=Inmueble'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-[9px] lg:text-xs font-black uppercase tracking-wider">${item.ref || 'S/R'}</div>
+                        <div class="absolute bottom-3 right-3 bg-blue-600 text-white px-3 py-1.5 rounded-xl text-sm lg:text-base font-bold shadow-lg">$${Number(item.priceSale).toLocaleString()}</div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="font-bold text-slate-800 text-lg lg:text-xl line-clamp-1 mb-1">${item.title}</h3>
-                        <p class="text-xs lg:text-sm font-bold text-slate-400 uppercase tracking-widest mb-5">${item.province}, ${item.municipality}</p>
-                        <div class="flex items-center gap-4 border-t border-slate-50 pt-5">
-                            <div class="flex items-center gap-1.5 text-slate-500 text-sm lg:text-base">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-                                <span class="font-semibold">${item.rooms} hab</span>
+                    <div class="p-4 lg:p-6">
+                        <h3 class="card-title font-bold text-slate-800 text-base lg:text-xl line-clamp-1 mb-1">${item.title}</h3>
+                        <p class="text-[10px] lg:text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">${item.province}</p>
+                        <div class="flex items-center gap-4 border-t border-slate-50 pt-4">
+                            <div class="flex items-center gap-1.5 text-slate-500 text-xs lg:text-base">
+                                <span class="font-bold">${item.rooms} hab</span>
                             </div>
-                            <div class="flex items-center gap-1.5 text-slate-500 text-sm lg:text-base">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>
-                                <span class="font-semibold">${item.bathrooms} ba</span>
+                            <div class="flex items-center gap-1.5 text-slate-500 text-xs lg:text-base">
+                                <span class="font-bold">${item.bathrooms} ba</span>
                             </div>
                         </div>
                     </div>
@@ -323,142 +336,101 @@
             `).join('');
         };
 
-        // Detalle de Anuncio
         window.viewDetails = (id) => {
             const item = listingsData.find(i => i.id === id);
             if(!item) return;
 
-            const sugeridos = listingsData.filter(s => s.province === item.province && s.id !== item.id).slice(0, 4);
-
-            const waMessage = encodeURIComponent(`Hola ${item.contactName}, estoy interesado en la propiedad: "${item.title}" (Ref: ${item.ref || 'N/A'}) que vi en Rumbo Casa. Precio: $${Number(item.priceSale).toLocaleString()}.`);
+            const waMessage = encodeURIComponent(`Hola, me interesa: "${item.title}" (Ref: ${item.ref || 'N/A'}).`);
             const waLink = `https://wa.me/${item.contactPhone}?text=${waMessage}`;
 
             const content = `
-                <div class="mb-8">
-                    <button onclick="navigateTo('catalog')" class="flex items-center gap-2 font-bold text-slate-400 hover:text-slate-900 transition text-sm lg:text-base group">
-                        <div class="bg-white p-2 rounded-lg group-hover:bg-slate-200 transition"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></div> 
-                        Regresar a la búsqueda
+                <div class="mb-6 lg:mb-8">
+                    <button onclick="navigateTo('catalog')" class="flex items-center gap-2 font-bold text-slate-400 hover:text-slate-900 transition text-sm lg:text-base">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+                        Volver al catálogo
                     </button>
                 </div>
                 
-                <div class="bg-white rounded-[2.5rem] border border-slate-200 shadow-2xl overflow-hidden">
-                    <div class="p-8 lg:p-12">
-                        <div class="flex flex-col lg:flex-row gap-12">
-                            <!-- Columna Izquierda: Galería -->
+                <div class="bg-white rounded-3xl lg:rounded-[2.5rem] border border-slate-200 shadow-2xl overflow-hidden mb-10">
+                    <div class="p-5 lg:p-12">
+                        <div class="flex flex-col lg:flex-row gap-6 lg:gap-12">
                             <div class="lg:w-1/2 space-y-4">
-                                <div class="rounded-[2rem] overflow-hidden bg-slate-100 aspect-[4/3] shadow-inner group cursor-zoom-in">
+                                <div class="rounded-2xl lg:rounded-[2rem] overflow-hidden bg-slate-100 aspect-[4/3] shadow-inner">
                                     <img src="${item.photos?.[0] || ''}" class="w-full h-full object-cover" id="main-detail-img">
                                 </div>
                                 <div class="gallery-grid">
                                     ${(item.photos || []).map(p => `
-                                        <div class="aspect-square rounded-2xl overflow-hidden bg-slate-100 border-2 border-transparent hover:border-blue-500 transition-all duration-200">
-                                            <img src="${p}" class="w-full h-full object-cover hover:opacity-80 transition cursor-pointer" onclick="document.getElementById('main-detail-img').src = this.src">
+                                        <div class="aspect-square rounded-xl overflow-hidden bg-slate-100 border-2 border-transparent">
+                                            <img src="${p}" class="w-full h-full object-cover cursor-pointer" onclick="document.getElementById('main-detail-img').src = this.src">
                                         </div>
                                     `).join('')}
                                 </div>
                             </div>
 
-                            <!-- Columna Derecha: Info -->
                             <div class="lg:w-1/2 flex flex-col">
-                                <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
-                                    <div>
-                                        <h1 class="text-3xl lg:text-4xl font-extrabold text-slate-900 leading-tight mb-2">${item.title}</h1>
-                                        <div class="flex items-center gap-2">
-                                            <svg class="text-blue-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                            <p class="text-sm lg:text-base font-bold text-slate-400 uppercase tracking-widest">${item.province}, ${item.municipality}</p>
-                                        </div>
+                                <div class="mb-6">
+                                    <h1 class="text-2xl lg:text-4xl font-extrabold text-slate-900 leading-tight mb-2">${item.title}</h1>
+                                    <p class="text-sm lg:text-base font-bold text-slate-400 uppercase tracking-widest">${item.province}, ${item.municipality}</p>
+                                </div>
+
+                                <div class="bg-blue-50 p-5 lg:p-6 rounded-2xl mb-6">
+                                    <p class="text-3xl lg:text-4xl font-black text-blue-600">$${Number(item.priceSale).toLocaleString()}</p>
+                                    <p class="text-xs lg:text-sm font-bold text-slate-400 line-through">Antes $${Number(item.priceOriginal).toLocaleString()}</p>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-3 mb-6">
+                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Hab</p>
+                                        <p class="text-lg lg:text-xl font-extrabold text-slate-800">${item.rooms}</p>
                                     </div>
-                                    <div class="bg-blue-50 p-4 lg:p-6 rounded-[1.5rem] text-right min-w-[180px]">
-                                        <p class="text-3xl lg:text-4xl font-black text-blue-600">$${Number(item.priceSale).toLocaleString()}</p>
-                                        <p class="text-xs lg:text-sm font-bold text-slate-400 line-through">Vlr. Tasación $${Number(item.priceOriginal).toLocaleString()}</p>
+                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Baños</p>
+                                        <p class="text-lg lg:text-xl font-extrabold text-slate-800">${item.bathrooms}</p>
+                                    </div>
+                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Ref</p>
+                                        <p class="text-lg lg:text-xl font-extrabold text-slate-800">${item.ref || 'N/A'}</p>
                                     </div>
                                 </div>
 
-                                <div class="grid grid-cols-3 gap-4 mb-10">
-                                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 text-center">
-                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Habitaciones</p>
-                                        <p class="text-xl font-extrabold text-slate-800">${item.rooms}</p>
-                                    </div>
-                                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 text-center">
-                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Baños</p>
-                                        <p class="text-xl font-extrabold text-slate-800">${item.bathrooms}</p>
-                                    </div>
-                                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 text-center">
-                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Referencia</p>
-                                        <p class="text-xl font-extrabold text-slate-800">${item.ref || 'N/A'}</p>
-                                    </div>
+                                <div class="bg-slate-50 p-5 lg:p-8 rounded-2xl mb-8 flex-1">
+                                    <h3 class="font-bold text-slate-900 mb-2 text-xs lg:text-sm uppercase tracking-widest">Información:</h3>
+                                    <p class="text-base lg:text-lg text-slate-600 leading-relaxed whitespace-pre-line">${item.description}</p>
                                 </div>
 
-                                <div class="bg-slate-50 p-6 lg:p-8 rounded-[2rem] border border-slate-100 mb-10 flex-1">
-                                    <h3 class="font-bold text-slate-900 mb-4 text-xs lg:text-sm uppercase tracking-widest">Descripción de la Propiedad:</h3>
-                                    <p class="text-sm lg:text-lg text-slate-600 leading-relaxed whitespace-pre-line">${item.description}</p>
-                                </div>
-
-                                <div class="flex items-center gap-4">
-                                    <a href="${waLink}" target="_blank" class="flex-1 bg-[#25D366] text-white text-center py-5 rounded-2xl font-bold text-lg hover:brightness-105 transition-all shadow-xl shadow-green-100 flex items-center justify-center gap-3">
-                                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-1.557-.519-2.59-1.481-.849-.787-1.423-1.758-1.589-2.045-.166-.287-.018-.442.126-.586.13-.13.287-.341.43-.512.144-.171.191-.287.287-.478.096-.191.048-.359-.024-.512-.072-.154-.645-1.557-.884-2.133-.232-.56-.471-.482-.645-.491-.166-.008-.359-.01-.553-.01s-.512.072-.779.359c-.266.287-1.019 1.019-1.019 2.484s1.066 2.871 1.21 3.064c.144.191 2.094 3.187 5.068 4.47.708.306 1.259.489 1.688.626.711.226 1.359.194 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.413-.074-.124-.272-.191-.56-.337z"/></svg>
-                                        Contactar a ${item.contactName} vía WhatsApp
-                                    </a>
-                                </div>
+                                <a href="${waLink}" target="_blank" class="w-full bg-[#25D366] text-white text-center py-4 lg:py-5 rounded-2xl font-bold text-lg hover:brightness-105 transition shadow-xl shadow-green-100 flex items-center justify-center gap-3">
+                                    WhatsApp Contacto
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                ${sugeridos.length > 0 ? `
-                    <div class="mt-16">
-                        <h3 class="text-sm font-extrabold mb-8 text-slate-400 uppercase tracking-[0.2em]">Sugerencias en ${item.province}</h3>
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                            ${sugeridos.map(s => `
-                                <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 cursor-pointer hover:shadow-xl hover:translate-y-[-5px] transition-all" onclick="viewDetails('${s.id}')">
-                                    <img src="${s.photos?.[0] || ''}" class="h-32 lg:h-40 w-full object-cover">
-                                    <div class="p-4">
-                                        <p class="font-bold text-sm lg:text-base text-slate-800 truncate">${s.title}</p>
-                                        <p class="text-blue-600 font-extrabold text-base lg:text-lg mt-1">$${Number(s.priceSale).toLocaleString()}</p>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                ` : ''}
             `;
             document.getElementById('details-content').innerHTML = content;
             navigateTo('details');
         };
 
-        // Renderizado Admin
         window.renderAdminList = () => {
-            const queryText = document.getElementById('admin-search').value.toLowerCase();
-            const list = document.getElementById('admin-list');
-            const filtered = listingsData.filter(i => i.title.toLowerCase().includes(queryText) || (i.ref || "").toLowerCase().includes(queryText));
-            
-            list.innerHTML = filtered.map(item => `
-                <tr class="hover:bg-slate-50 transition">
-                    <td class="px-8 py-6 font-mono text-sm font-bold text-blue-600">${item.ref || 'S/R'}</td>
-                    <td class="px-8 py-6 font-bold text-slate-700 text-lg">${item.title}</td>
-                    <td class="px-8 py-6 text-right space-x-3">
-                        <button onclick="editListing('${item.id}')" class="text-blue-600 font-bold px-4 py-2 text-sm border border-blue-100 rounded-xl hover:bg-blue-600 hover:text-white transition">Editar</button>
-                        <button onclick="openDeleteModal('${item.id}')" class="text-red-500 font-bold px-4 py-2 text-sm border border-red-50 rounded-xl hover:bg-red-600 hover:text-white transition">Eliminar</button>
+            const q = document.getElementById('admin-search').value.toLowerCase();
+            const filtered = listingsData.filter(i => i.title.toLowerCase().includes(q) || (i.ref || "").toLowerCase().includes(q));
+            document.getElementById('admin-list').innerHTML = filtered.map(item => `
+                <tr>
+                    <td class="px-6 py-4 font-mono text-xs font-bold text-blue-600">${item.ref || 'S/R'}</td>
+                    <td class="px-6 py-4 font-bold text-slate-700 text-sm lg:text-base">${item.title}</td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        <button onclick="editListing('${item.id}')" class="text-blue-600 font-bold text-xs lg:text-sm">Editar</button>
+                        <button onclick="openDeleteModal('${item.id}')" class="text-red-500 font-bold text-xs lg:text-sm">Borrar</button>
                     </td>
                 </tr>
             `).join('');
-        };
-
-        // Formulario
-        window.resetPublishForm = () => {
-            document.getElementById('edit-id').value = "";
-            document.getElementById('form-listing').reset();
-            document.getElementById('form-title').innerText = "Publicar Nueva Propiedad";
-            document.getElementById('submit-btn').innerText = "Publicar Anuncio";
-            updateMunicipalities();
         };
 
         window.editListing = (id) => {
             const item = listingsData.find(l => l.id === id);
             if(!item) return;
             document.getElementById('edit-id').value = id;
-            document.getElementById('form-title').innerText = "Editar Anuncio Existente";
-            document.getElementById('submit-btn').innerText = "Guardar Cambios";
+            document.getElementById('form-title').innerText = "Editar";
+            document.getElementById('submit-btn').innerText = "Guardar";
             document.getElementById('ref-number').value = item.ref || "";
             document.getElementById('title').value = item.title;
             document.getElementById('property-type').value = item.propertyType;
@@ -492,56 +464,40 @@
                 contactName: document.getElementById('contact-name').value,
                 contactPhone: document.getElementById('contact-phone').value,
                 description: document.getElementById('description').value,
-                photos: document.getElementById('photo-urls').value.split('\n').map(u => u.trim()).filter(u => u !== ""),
+                photos: document.getElementById('photo-urls').value.split('\n').filter(u => u.trim() !== ""),
                 updated_at: serverTimestamp()
             };
-
             try {
                 if(editId) {
                     await updateDoc(doc(db, 'artifacts', app_id, 'public', 'data', 'listings', editId), payload);
-                    showToast("Propiedad actualizada correctamente");
                 } else {
                     payload.created_at = serverTimestamp();
                     await addDoc(collection(db, 'artifacts', app_id, 'public', 'data', 'listings'), payload);
-                    showToast("Propiedad publicada con éxito");
                 }
+                showToast("Guardado correctamente");
                 navigateTo('admin-panel');
-            } catch (err) {
-                console.error(err);
-                showToast("Hubo un error al guardar los datos");
-            }
+            } catch (err) { showToast("Error al guardar"); }
         };
 
-        // Autenticación Administrativa
-        window.handlePublishAuth = () => isAdminLoggedIn ? navigateTo('publish') : navigateTo('login');
-        
         document.getElementById('form-login').onsubmit = (e) => {
             e.preventDefault();
-            const user = document.getElementById('login-user').value;
-            const pass = document.getElementById('login-pass').value;
-            // Nota: Credenciales estáticas por requerimiento, escalable a Auth Firebase si se desea.
-            if(user === "admin" && pass === "cuba2024") {
+            if(document.getElementById('login-user').value === "admin" && document.getElementById('login-pass').value === "cuba2024") {
                 isAdminLoggedIn = true;
                 document.getElementById('btn-logout').classList.remove('hidden-view');
                 document.getElementById('admin-nav').classList.remove('hidden-view');
-                document.getElementById('btn-publish-main').innerText = "Panel Admin";
                 navigateTo('admin-panel');
-                showToast("Bienvenido, Administrador");
-            } else {
-                showToast("Usuario o contraseña incorrectos");
-            }
+                showToast("Bienvenido");
+            } else { showToast("Error"); }
         };
 
         window.logout = () => {
             isAdminLoggedIn = false;
             document.getElementById('btn-logout').classList.add('hidden-view');
             document.getElementById('admin-nav').classList.add('hidden-view');
-            document.getElementById('btn-publish-main').innerText = "Publicar";
             navigateTo('catalog');
-            showToast("Has cerrado la sesión");
         };
 
-        // Modales y Notificaciones
+        window.handlePublishAuth = () => isAdminLoggedIn ? navigateTo('admin-panel') : navigateTo('login');
         window.openDeleteModal = (id) => { deleteTargetId = id; document.getElementById('delete-modal').classList.remove('hidden-view'); };
         window.closeDeleteModal = () => { deleteTargetId = null; document.getElementById('delete-modal').classList.add('hidden-view'); };
 
@@ -549,44 +505,34 @@
             if(!deleteTargetId) return;
             await deleteDoc(doc(db, 'artifacts', app_id, 'public', 'data', 'listings', deleteTargetId));
             closeDeleteModal();
-            showToast("Inmueble eliminado permanentemente");
+            showToast("Eliminado");
         };
 
         function showToast(m) {
             const t = document.getElementById('toast');
             document.getElementById('toast-text').innerText = m;
             t.classList.remove('translate-y-32', 'opacity-0');
-            setTimeout(() => t.classList.add('translate-y-32', 'opacity-0'), 4000);
+            setTimeout(() => t.classList.add('translate-y-32', 'opacity-0'), 3000);
         }
 
         window.updateMunicipalities = () => {
             const prov = document.getElementById('province').value;
-            const sel = document.getElementById('municipality');
-            sel.innerHTML = (cubaData[prov] || []).map(m => `<option value="${m}">${m}</option>`).join('');
+            document.getElementById('municipality').innerHTML = (cubaData[prov] || []).map(m => `<option value="${m}">${m}</option>`).join('');
         };
 
         window.updateFilterMunicipalities = () => {
             const prov = document.getElementById('filter-province').value;
-            const sel = document.getElementById('filter-municipality');
-            sel.innerHTML = '<option value="">Todos los municipios</option>' + (cubaData[prov] || []).map(m => `<option value="${m}">${m}</option>`).join('');
+            document.getElementById('filter-municipality').innerHTML = '<option value="">Todos</option>' + (cubaData[prov] || []).map(m => `<option value="${m}">${m}</option>`).join('');
             applyFilters();
         };
 
         const init = async () => {
             const provs = Object.keys(cubaData).sort();
             document.getElementById('province').innerHTML = provs.map(p => `<option value="${p}">${p}</option>`).join('');
-            document.getElementById('filter-province').innerHTML = '<option value="">Todas las provincias</option>' + provs.map(p => `<option value="${p}">${p}</option>`).join('');
+            document.getElementById('filter-province').innerHTML = '<option value="">Provincia</option>' + provs.map(p => `<option value="${p}">${p}</option>`).join('');
             updateMunicipalities();
-            
-            onAuthStateChanged(auth, async (u) => {
-                if (u) {
-                    startSync();
-                } else {
-                    await signInAnonymously(auth);
-                }
-            });
+            onAuthStateChanged(auth, async (u) => { u ? startSync() : await signInAnonymously(auth); });
         };
-
         init();
     </script>
 </body>
