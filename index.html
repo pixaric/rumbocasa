@@ -227,6 +227,9 @@
         </div>
     </div>
 
+    <!-- Elemento auxiliar para copiar al portapapeles -->
+    <textarea id="copy-helper" class="fixed -top-full left-0 opacity-0 pointer-events-none"></textarea>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -289,8 +292,17 @@
             const q = collection(db, 'artifacts', app_id, 'public', 'data', 'listings');
             onSnapshot(q, (snap) => {
                 listingsData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                applyFilters();
-                renderAdminList();
+                
+                // Detectar si venimos de un link compartido por URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const sharedId = urlParams.get('id');
+                if (sharedId && listingsData.find(i => i.id === sharedId)) {
+                    viewDetails(sharedId);
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } else {
+                    applyFilters();
+                    renderAdminList();
+                }
             });
         };
 
@@ -340,10 +352,14 @@
             `}).join('');
         };
 
-        window.toggleDesc = (btn) => {
-            const container = btn.previousElementSibling;
-            const isTruncated = container.classList.toggle('description-truncated');
-            btn.innerText = isTruncated ? 'Ver más' : 'Ver menos';
+        window.copyShareLink = (id) => {
+            const currentUrl = window.location.href.split('?')[0];
+            const shareUrl = `${currentUrl}?id=${id}`;
+            const helper = document.getElementById('copy-helper');
+            helper.value = shareUrl;
+            helper.select();
+            document.execCommand('copy');
+            showToast("¡Enlace publicitario copiado!");
         };
 
         window.viewDetails = (id) => {
@@ -351,9 +367,15 @@
             if(!item) return;
 
             document.getElementById('details-content').innerHTML = `
-                <button onclick="navigateTo('catalog')" class="mb-4 text-[10px] font-bold text-slate-400 flex items-center gap-1 uppercase tracking-tighter">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Volver al catálogo
-                </button>
+                <div class="flex justify-between items-center mb-4">
+                    <button onclick="navigateTo('catalog')" class="text-[10px] font-bold text-slate-400 flex items-center gap-1 uppercase tracking-tighter">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Catálogo
+                    </button>
+                    <button onclick="copyShareLink('${item.id}')" class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1.5 hover:bg-blue-100 transition-colors">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        Copiar Enlace Publicitario
+                    </button>
+                </div>
                 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-lg">
                     <div class="grid lg:grid-cols-2">
                         <div class="p-4 lg:p-8 space-y-4">
@@ -395,7 +417,7 @@
                             <div class="flex-1 mb-6">
                                 <p class="text-[9px] font-bold text-slate-400 uppercase mb-2">Descripción</p>
                                 <div class="text-detail-desc text-slate-600 description-truncated whitespace-pre-line">${item.description}</div>
-                                <button onclick="toggleDesc(this)" class="text-blue-600 font-bold text-[10px] mt-1">Ver más</button>
+                                <button onclick="window.toggleDesc(this)" class="text-blue-600 font-bold text-[10px] mt-1">Ver más</button>
                             </div>
 
                             <a href="https://wa.me/${item.contactPhone}" target="_blank" class="bg-[#25D366] text-white py-3 rounded-xl font-bold text-center text-sm shadow-md hover:bg-[#1eb954] transition-colors flex items-center justify-center gap-2">
@@ -407,6 +429,12 @@
                 </div>
             `;
             navigateTo('details');
+        };
+
+        window.toggleDesc = (btn) => {
+            const container = btn.previousElementSibling;
+            const isTruncated = container.classList.toggle('description-truncated');
+            btn.innerText = isTruncated ? 'Ver más' : 'Ver menos';
         };
 
         window.renderAdminList = () => {
