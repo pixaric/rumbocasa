@@ -20,17 +20,33 @@
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 6px;
         }
 
-        /* Ajustes específicos para móviles (Legibilidad) */
+        .description-truncated {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Ajustes de reducción para móviles */
         @media (max-width: 640px) {
-            h1 { font-size: 2.25rem !important; line-height: 2.5rem !important; }
-            .card-title { font-size: 1.25rem !important; }
-            .price-tag { font-size: 1.1rem !important; }
-            input, select, textarea { font-size: 16px !important; } 
-            .btn-mobile-large { padding-top: 1rem !important; padding-bottom: 1rem !important; font-size: 1.1rem !important; }
+            h1 { font-size: 1.5rem !important; line-height: 1.8rem !important; }
+            .section-title { font-size: 1.4rem !important; }
+            .card-title { font-size: 0.95rem !important; }
+            .price-tag { font-size: 0.9rem !important; }
+            .text-detail-title { font-size: 1.25rem !important; }
+            .text-detail-price { font-size: 1.5rem !important; }
+            .text-detail-desc { font-size: 0.85rem !important; line-height: 1.3rem !important; }
+            .p-mobile-reduced { padding: 0.75rem !important; }
+            .gap-mobile-reduced { gap: 0.5rem !important; }
+            input, select, textarea { font-size: 13px !important; padding: 0.6rem !important; } 
+            .btn-mobile-large { padding: 0.65rem !important; font-size: 0.85rem !important; }
+            .nav-h { height: 3.25rem !important; }
+            .logo-text { font-size: 1rem !important; }
+            .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); gap: 4px; }
         }
 
         @media (min-width: 1536px) {
@@ -42,83 +58,82 @@
 <body class="bg-slate-50 min-h-screen text-slate-900 transition-all duration-300">
 
     <!-- Navbar -->
-    <nav class="bg-white/90 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-[100] py-2 lg:py-3">
-        <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 lg:h-20 flex justify-between items-center">
+    <nav class="bg-white/90 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-[100] py-1 lg:py-3 nav-h">
+        <div class="max-w-7xl mx-auto px-4 lg:px-6 h-full flex justify-between items-center">
             <div class="flex items-center gap-2 lg:gap-3 cursor-pointer" onclick="navigateTo('catalog')">
-                <div class="bg-blue-600 p-2 lg:p-3 rounded-xl lg:2xl text-white shadow-xl shadow-blue-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lg:w-6 lg:h-6"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <div class="bg-blue-600 p-1 lg:p-3 rounded-lg lg:rounded-2xl text-white shadow-lg shadow-blue-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lg:w-6 lg:h-6"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 </div>
-                <span class="text-lg lg:text-2xl font-extrabold tracking-tight text-slate-900">Rumbo Casa</span>
+                <span class="text-sm lg:text-2xl font-extrabold tracking-tight text-slate-900 logo-text">Rumbo Casa</span>
             </div>
             
-            <div class="flex items-center gap-3 lg:gap-5">
-                <div id="admin-nav" class="hidden-view flex items-center gap-3 lg:gap-6 border-r border-slate-200 pr-3 lg:pr-5">
-                    <button onclick="navigateTo('admin-panel')" class="text-slate-600 hover:text-blue-600 font-bold text-xs lg:text-base transition">Gestionar</button>
+            <div class="flex items-center gap-2 lg:gap-5">
+                <div id="admin-nav" class="hidden-view flex items-center gap-2 lg:gap-6 border-r border-slate-200 pr-2 lg:pr-5">
+                    <button onclick="navigateTo('admin-panel')" class="text-slate-600 hover:text-blue-600 font-bold text-[9px] lg:text-base transition">Gestionar</button>
                 </div>
-                <button id="btn-publish-main" onclick="handlePublishAuth()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 lg:px-6 py-2 lg:py-3 rounded-xl font-bold transition text-xs lg:text-base shadow-lg">
+                <button id="btn-publish-main" onclick="handlePublishAuth()" class="bg-slate-900 hover:bg-slate-800 text-white px-2.5 lg:px-6 py-1.5 lg:py-3 rounded-lg lg:rounded-xl font-bold transition text-[9px] lg:text-base shadow-lg">
                     Publicar
                 </button>
-                <button id="btn-logout" onclick="logout()" class="hidden-view text-red-500 hover:bg-red-50 p-2 rounded-xl transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <button id="btn-logout" onclick="logout()" class="hidden-view text-red-500 hover:bg-red-50 p-1 rounded-lg transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </button>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 lg:px-6 py-6 lg:py-12">
+    <main class="max-w-7xl mx-auto px-4 lg:px-6 py-4 lg:py-12">
         
         <!-- VISTA: Catálogo Público -->
         <section id="view-catalog" class="view-section">
-            <div class="mb-6 lg:mb-12">
-                <h1 class="text-3xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">Propiedades en <span class="text-blue-600">Cuba</span></h1>
-                <p class="text-slate-500 mt-2 lg:mt-3 text-base lg:text-xl font-medium">Encuentra tu próximo hogar hoy mismo.</p>
+            <div class="mb-4 lg:mb-12">
+                <h1 class="text-xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">Propiedades en <span class="text-blue-600">Cuba</span></h1>
+                <p class="text-slate-500 mt-0.5 lg:mt-3 text-xs lg:text-xl font-medium">Encuentra tu próximo hogar hoy mismo.</p>
             </div>
 
             <!-- Buscador y Filtro -->
-            <div class="mb-8 space-y-3 lg:space-y-4 max-w-5xl">
-                <div class="flex flex-col sm:flex-row gap-3">
+            <div class="mb-6 space-y-2 lg:space-y-4 max-w-5xl">
+                <div class="flex flex-col sm:flex-row gap-2 lg:gap-3">
                     <div class="relative flex-1">
-                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar por título, referencia, municipio o provincia..." class="w-full pl-12 pr-4 py-3.5 lg:py-5 rounded-2xl bg-white border border-slate-200 focus:ring-4 focus:ring-blue-100 transition-all outline-none card-shadow text-base lg:text-lg">
-                        <svg class="absolute left-4 top-3.5 lg:top-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Buscar título, lugar..." class="w-full pl-9 lg:pl-12 pr-4 py-2 lg:py-5 rounded-xl lg:rounded-2xl bg-white border border-slate-200 focus:ring-4 focus:ring-blue-100 transition-all outline-none card-shadow text-xs lg:text-lg">
+                        <svg class="absolute left-3 lg:left-4 top-2.5 lg:top-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </div>
-                    <button onclick="toggleFilters()" class="bg-white border border-slate-200 px-6 py-3.5 lg:py-5 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-slate-50 transition card-shadow text-base lg:text-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                    <button onclick="toggleFilters()" class="bg-white border border-slate-200 px-3 lg:px-6 py-2 lg:py-5 rounded-xl lg:rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-50 transition card-shadow text-xs lg:text-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
                         Filtros
                     </button>
                 </div>
 
-                <div id="filter-panel" class="hidden-view bg-white rounded-2xl lg:rounded-3xl p-5 lg:p-10 border border-slate-200 card-shadow slide-down">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                <div id="filter-panel" class="hidden-view bg-white rounded-xl lg:rounded-3xl p-3 lg:p-10 border border-slate-200 card-shadow slide-down">
+                    <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-6">
                         <div class="space-y-1">
-                            <label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Provincia</label>
-                            <select id="filter-province" onchange="updateFilterMunicipalities()" class="w-full p-3 lg:p-4 text-sm lg:text-base rounded-xl bg-slate-50 border-none ring-1 ring-slate-200"></select>
+                            <label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Provincia</label>
+                            <select id="filter-province" onchange="updateFilterMunicipalities()" class="w-full p-1.5 lg:p-4 text-[10px] lg:text-base rounded-lg lg:rounded-xl bg-slate-50 border-none ring-1 ring-slate-200"></select>
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Municipio</label>
-                            <select id="filter-municipality" onchange="applyFilters()" class="w-full p-3 lg:p-4 text-sm lg:text-base rounded-xl bg-slate-50 border-none ring-1 ring-slate-200"></select>
+                            <label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Municipio</label>
+                            <select id="filter-municipality" onchange="applyFilters()" class="w-full p-1.5 lg:p-4 text-[10px] lg:text-base rounded-lg lg:rounded-xl bg-slate-50 border-none ring-1 ring-slate-200"></select>
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Habitaciones</label>
-                            <select id="filter-rooms" onchange="applyFilters()" class="w-full p-3 lg:p-4 text-sm lg:text-base rounded-xl bg-slate-50 border-none ring-1 ring-slate-200">
+                            <label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Habitaciones</label>
+                            <select id="filter-rooms" onchange="applyFilters()" class="w-full p-1.5 lg:p-4 text-[10px] lg:text-base rounded-lg lg:rounded-xl bg-slate-50 border-none ring-1 ring-slate-200">
                                 <option value="">Cualquiera</option>
                                 <option value="1">1+</option><option value="2">2+</option><option value="3">3+</option>
                             </select>
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Máx</label>
-                            <input type="number" id="filter-price-max" oninput="applyFilters()" placeholder="Ej: 50000" class="w-full p-3 lg:p-4 text-sm lg:text-base rounded-xl bg-slate-50 ring-1 ring-slate-200 outline-none">
+                            <label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Máx</label>
+                            <input type="number" id="filter-price-max" oninput="applyFilters()" placeholder="Ej: 50000" class="w-full p-1.5 lg:p-4 text-[10px] lg:text-base rounded-lg lg:rounded-xl bg-slate-50 ring-1 ring-slate-200 outline-none">
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Contador de resultados -->
-            <div id="results-counter" class="mb-6 flex items-center gap-2">
-                <span class="bg-slate-200 text-slate-600 px-3 py-1 rounded-full text-xs lg:text-sm font-bold" id="results-count">0 inmuebles</span>
-                <span class="text-slate-400 text-xs lg:text-sm font-medium" id="results-label">encontrados según tus criterios</span>
+            <div id="results-counter" class="mb-4 lg:mb-6 flex items-center gap-2">
+                <span class="bg-slate-200 text-slate-600 px-2 py-0.5 lg:px-3 lg:py-1 rounded-full text-[9px] lg:text-sm font-bold" id="results-count">0 inmuebles</span>
             </div>
 
-            <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8"></div>
+            <div id="catalog-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-8"></div>
         </section>
 
         <!-- VISTA: Detalle -->
@@ -128,32 +143,32 @@
 
         <!-- VISTAS DE ADMINISTRACIÓN -->
         <section id="view-login" class="view-section hidden-view">
-            <div class="max-w-md mx-auto mt-10 lg:mt-20 bg-white rounded-3xl p-8 lg:p-10 border border-slate-200 shadow-2xl">
-                <h2 class="text-xl lg:text-2xl font-bold mb-6 text-center">Acceso Administrador</h2>
-                <form id="form-login" class="space-y-4 lg:space-y-6">
-                    <input type="text" id="login-user" placeholder="Usuario" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200">
-                    <input type="password" id="login-pass" placeholder="Contraseña" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200">
-                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl text-lg shadow-lg">Entrar</button>
-                    <button type="button" onclick="navigateTo('catalog')" class="w-full text-slate-400 font-bold py-2 text-xs uppercase tracking-widest">Cerrar</button>
+            <div class="max-w-md mx-auto mt-4 lg:mt-20 bg-white rounded-2xl p-5 lg:p-10 border border-slate-200 shadow-2xl">
+                <h2 class="text-base lg:text-2xl font-bold mb-4 text-center">Acceso</h2>
+                <form id="form-login" class="space-y-3 lg:space-y-6">
+                    <input type="text" id="login-user" placeholder="Usuario" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs lg:text-sm">
+                    <input type="password" id="login-pass" placeholder="Contraseña" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs lg:text-sm">
+                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs lg:text-lg shadow-lg">Entrar</button>
+                    <button type="button" onclick="navigateTo('catalog')" class="w-full text-slate-400 font-bold py-1 text-[8px] lg:text-[10px] uppercase tracking-widest">Cerrar</button>
                 </form>
             </div>
         </section>
 
         <section id="view-admin-panel" class="view-section hidden-view">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 lg:mb-10">
-                <h2 class="text-2xl lg:text-3xl font-bold">Gestión de Anuncios</h2>
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 lg:mb-10">
+                <h2 class="text-lg lg:text-3xl font-bold">Gestión</h2>
                 <div class="relative w-full sm:w-auto">
-                    <input type="text" id="admin-search" oninput="renderAdminList()" placeholder="Buscar..." class="w-full pl-10 p-3 lg:p-4 border rounded-2xl outline-none border-slate-200 text-base">
-                    <svg class="absolute left-3 top-3.5 lg:top-4.5 text-slate-300" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" id="admin-search" oninput="renderAdminList()" placeholder="Buscar..." class="w-full pl-8 p-1.5 lg:p-4 border rounded-xl lg:rounded-2xl outline-none border-slate-200 text-xs lg:text-base">
+                    <svg class="absolute left-2.5 top-2 lg:top-4.5 text-slate-300" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 </div>
             </div>
-            <div class="bg-white rounded-2xl lg:rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm overflow-x-auto">
-                <table class="w-full text-left text-sm lg:text-base min-w-[600px]">
+            <div class="bg-white rounded-xl lg:rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm overflow-x-auto">
+                <table class="w-full text-left text-[10px] lg:text-base min-w-[400px]">
                     <thead class="bg-slate-50 border-b border-slate-200">
                         <tr>
-                            <th class="px-6 py-4 text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase">Ref</th>
-                            <th class="px-6 py-4 text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase">Título</th>
-                            <th class="px-6 py-4 text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase text-right">Acciones</th>
+                            <th class="px-3 py-2 lg:px-6 lg:py-4 text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase">Ref</th>
+                            <th class="px-3 py-2 lg:px-6 lg:py-4 text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase">Título</th>
+                            <th class="px-3 py-2 lg:px-6 lg:py-4 text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase text-right">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="admin-list" class="divide-y divide-slate-100"></tbody>
@@ -162,33 +177,33 @@
         </section>
 
         <section id="view-publish" class="view-section hidden-view">
-            <div class="max-w-4xl mx-auto bg-white rounded-3xl lg:rounded-[2.5rem] p-6 lg:p-14 border border-slate-200 shadow-2xl">
-                <div class="flex items-center gap-4 mb-6 lg:mb-10">
-                    <button onclick="navigateTo('admin-panel')" class="p-2 lg:p-3 bg-slate-100 rounded-xl">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl lg:rounded-[2.5rem] p-4 lg:p-14 border border-slate-200 shadow-2xl">
+                <div class="flex items-center gap-2 mb-4 lg:mb-10">
+                    <button onclick="navigateTo('admin-panel')" class="p-1 lg:p-3 bg-slate-100 rounded-lg">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
                     </button>
-                    <h2 id="form-title" class="text-xl lg:text-3xl font-extrabold">Publicar Propiedad</h2>
+                    <h2 id="form-title" class="text-base lg:text-3xl font-extrabold">Publicar</h2>
                 </div>
-                <form id="form-listing" class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-8">
+                <form id="form-listing" class="grid grid-cols-1 md:grid-cols-2 gap-2 lg:gap-8">
                     <input type="hidden" id="edit-id">
-                    <div class="md:col-span-1"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Referencia</label><input type="text" id="ref-number" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
-                    <div class="md:col-span-1"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Título</label><input type="text" id="title" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
-                    <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Tipo</label><select id="property-type" class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"><option>Casa Independiente</option><option>Apartamento</option><option>Biplanta</option><option>Finca</option></select></div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Habitaciones</label><input type="number" id="rooms" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
-                        <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Baños</label><input type="number" id="bathrooms" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
+                    <div class="md:col-span-1"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Referencia</label><input type="text" id="ref-number" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
+                    <div class="md:col-span-1"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Título</label><input type="text" id="title" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
+                    <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Tipo</label><select id="property-type" class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"><option>Casa Independiente</option><option>Apartamento</option><option>Biplanta</option><option>Finca</option></select></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Hab</label><input type="number" id="rooms" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
+                        <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Baños</label><input type="number" id="bathrooms" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
                     </div>
-                    <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Venta (USD)</label><input type="number" id="price-sale" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
-                    <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Tasación (USD)</label><input type="number" id="price-original" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
-                    <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Provincia</label><select id="province" onchange="updateMunicipalities()" class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></select></div>
-                    <div><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Municipio</label><select id="municipality" class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></select></div>
-                    <div class="md:col-span-2"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Fotos (URLs, una por línea)</label><textarea id="photo-urls" rows="3" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none font-mono text-sm border border-slate-200"></textarea></div>
-                    <div class="md:col-span-2"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Descripción</label><textarea id="description" rows="4" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none text-base border border-slate-200"></textarea></div>
-                    <div class="md:col-span-1"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Nombre Contacto</label><input type="text" id="contact-name" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200"></div>
-                    <div class="md:col-span-1"><label class="text-[10px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">WhatsApp</label><input type="tel" id="contact-phone" required class="w-full p-3.5 lg:p-4 bg-slate-50 rounded-xl outline-none border border-slate-200" placeholder="5312345678"></div>
-                    <div class="md:col-span-2 flex gap-4 pt-6 border-t">
-                        <button type="button" onclick="navigateTo('admin-panel')" class="px-6 py-4 border-2 border-slate-100 rounded-xl font-bold text-sm lg:text-base">Cancelar</button>
-                        <button type="submit" id="submit-btn" class="flex-1 bg-blue-600 text-white font-bold py-4 rounded-xl text-base lg:text-lg shadow-xl">Guardar</button>
+                    <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Venta</label><input type="number" id="price-sale" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
+                    <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Precio Tasación</label><input type="number" id="price-original" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
+                    <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Provincia</label><select id="province" onchange="updateMunicipalities()" class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></select></div>
+                    <div><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Municipio</label><select id="municipality" class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></select></div>
+                    <div class="md:col-span-2"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Fotos (URLs)</label><textarea id="photo-urls" rows="2" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none font-mono text-[10px] lg:text-xs border border-slate-200"></textarea></div>
+                    <div class="md:col-span-2"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Descripción</label><textarea id="description" rows="3" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none text-xs lg:text-base border border-slate-200"></textarea></div>
+                    <div class="md:col-span-1"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">Nombre</label><input type="text" id="contact-name" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
+                    <div class="md:col-span-1"><label class="text-[8px] lg:text-xs font-extrabold text-slate-400 uppercase tracking-widest">WhatsApp</label><input type="tel" id="contact-phone" required class="w-full p-2 lg:p-4 bg-slate-50 rounded-lg lg:rounded-xl outline-none border border-slate-200 text-xs lg:text-base"></div>
+                    <div class="md:col-span-2 flex gap-2 pt-3 border-t">
+                        <button type="button" onclick="navigateTo('admin-panel')" class="px-3 py-2 border-2 border-slate-100 rounded-lg lg:rounded-xl font-bold text-xs lg:text-base">Cerrar</button>
+                        <button type="submit" id="submit-btn" class="flex-1 bg-blue-600 text-white font-bold py-2 lg:py-4 rounded-lg lg:rounded-xl text-xs lg:text-lg shadow-xl">Guardar</button>
                     </div>
                 </form>
             </div>
@@ -197,19 +212,19 @@
 
     <!-- Modal Borrado -->
     <div id="delete-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 z-[200] hidden-view">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl">
-            <h3 class="text-xl font-bold mb-4 text-center">¿Eliminar anuncio?</h3>
-            <p class="text-slate-500 text-center mb-6 text-sm">Esta acción es permanente y no se puede deshacer.</p>
-            <div class="flex gap-3">
-                <button onclick="closeDeleteModal()" class="flex-1 py-3 border-2 border-slate-50 rounded-xl font-bold">No</button>
-                <button id="confirm-delete-btn" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold">Eliminar</button>
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+            <h3 class="text-base lg:text-xl font-bold mb-1 text-center">¿Eliminar anuncio?</h3>
+            <p class="text-slate-500 text-center mb-5 text-[10px] lg:text-sm">Esta acción no se puede deshacer.</p>
+            <div class="flex gap-2">
+                <button onclick="closeDeleteModal()" class="flex-1 py-2.5 border-2 border-slate-50 rounded-xl font-bold text-xs">No</button>
+                <button id="confirm-delete-btn" class="flex-1 py-2.5 bg-red-600 text-white rounded-xl font-bold text-xs">Borrar</button>
             </div>
         </div>
     </div>
 
     <!-- Toast -->
     <div id="toast" class="fixed bottom-6 lg:bottom-10 left-1/2 -translate-x-1/2 z-[300] transform translate-y-32 opacity-0 transition-all duration-500">
-        <div id="toast-body" class="bg-slate-900 text-white px-6 py-3.5 rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-3">
+        <div id="toast-body" class="bg-slate-900 text-white px-4 py-2.5 rounded-xl lg:rounded-2xl shadow-2xl font-bold text-[10px] lg:text-sm flex items-center gap-3">
             <span id="toast-text"></span>
         </div>
     </div>
@@ -303,37 +318,48 @@
                 return matchesSearch && matchesProv && matchesMun && matchesRooms && matchesPrice;
             });
             
-            // Actualizar contador
             const counter = document.getElementById('results-count');
             counter.innerText = `${filtered.length} inmueble${filtered.length !== 1 ? 's' : ''}`;
 
             const grid = document.getElementById('catalog-grid');
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-12 lg:py-24 text-center text-slate-300 font-bold text-lg lg:text-2xl">Sin resultados.</div>`;
+                grid.innerHTML = `<div class="col-span-full py-12 lg:py-24 text-center text-slate-300 font-bold text-xs lg:text-2xl">Sin resultados.</div>`;
                 return;
             }
 
             grid.innerHTML = filtered.map(item => `
-                <div class="bg-white rounded-2xl lg:rounded-[1.5rem] overflow-hidden border border-slate-200 card-shadow cursor-pointer hover:translate-y-[-4px] lg:hover:translate-y-[-8px] transition-all group" onclick="viewDetails('${item.id}')">
-                    <div class="h-48 lg:h-64 bg-slate-100 relative">
+                <div class="bg-white rounded-lg lg:rounded-[1.5rem] overflow-hidden border border-slate-200 card-shadow cursor-pointer hover:translate-y-[-4px] transition-all group" onclick="viewDetails('${item.id}')">
+                    <div class="h-28 lg:h-64 bg-slate-100 relative">
                         <img src="${item.photos?.[0] || 'https://via.placeholder.com/600x400?text=Inmueble'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-[9px] lg:text-xs font-black uppercase tracking-wider">${item.ref || 'S/R'}</div>
-                        <div class="absolute bottom-3 right-3 bg-blue-600 text-white px-3 py-1.5 rounded-xl text-sm lg:text-base font-bold shadow-lg">$${Number(item.priceSale).toLocaleString()}</div>
+                        <div class="absolute top-1.5 left-1.5 lg:top-3 lg:left-3 bg-white/90 backdrop-blur-md px-1.5 py-0.5 rounded-md text-[7px] lg:text-xs font-black uppercase tracking-wider">${item.ref || 'S/R'}</div>
+                        <div class="absolute bottom-1.5 right-1.5 lg:bottom-3 lg:right-3 bg-blue-600 text-white px-1.5 lg:px-3 py-1 lg:py-1.5 rounded-md lg:rounded-xl text-[10px] lg:text-base font-bold shadow-lg">$${Number(item.priceSale).toLocaleString()}</div>
                     </div>
-                    <div class="p-4 lg:p-6">
-                        <h3 class="card-title font-bold text-slate-800 text-base lg:text-xl line-clamp-1 mb-1">${item.title}</h3>
-                        <p class="text-[10px] lg:text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">${item.province}</p>
-                        <div class="flex items-center gap-4 border-t border-slate-50 pt-4">
-                            <div class="flex items-center gap-1.5 text-slate-500 text-xs lg:text-base">
-                                <span class="font-bold">${item.rooms} hab</span>
+                    <div class="p-2.5 lg:p-6">
+                        <h3 class="card-title font-bold text-slate-800 text-[11px] lg:text-xl line-clamp-1 mb-0.5">${item.title}</h3>
+                        <p class="text-[7px] lg:text-sm font-bold text-slate-400 uppercase tracking-widest mb-2 lg:mb-4">${item.province}</p>
+                        <div class="flex items-center gap-2 lg:gap-4 border-t border-slate-50 pt-2 lg:pt-4">
+                            <div class="flex items-center gap-1 text-slate-500 text-[9px] lg:text-base">
+                                <span class="font-bold">${item.rooms}h</span>
                             </div>
-                            <div class="flex items-center gap-1.5 text-slate-500 text-xs lg:text-base">
-                                <span class="font-bold">${item.bathrooms} ba</span>
+                            <div class="flex items-center gap-1 text-slate-500 text-[9px] lg:text-base">
+                                <span class="font-bold">${item.bathrooms}b</span>
                             </div>
                         </div>
                     </div>
                 </div>
             `).join('');
+        };
+
+        window.toggleDesc = (btn) => {
+            const container = btn.previousElementSibling;
+            const isExpanded = container.classList.contains('description-truncated');
+            if (isExpanded) {
+                container.classList.remove('description-truncated');
+                btn.innerText = 'Ver menos';
+            } else {
+                container.classList.add('description-truncated');
+                btn.innerText = 'Ver más';
+            }
         };
 
         window.viewDetails = (id) => {
@@ -344,23 +370,23 @@
             const waLink = `https://wa.me/${item.contactPhone}?text=${waMessage}`;
 
             const content = `
-                <div class="mb-6 lg:mb-8">
-                    <button onclick="navigateTo('catalog')" class="flex items-center gap-2 font-bold text-slate-400 hover:text-slate-900 transition text-sm lg:text-base">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
-                        Volver al catálogo
+                <div class="mb-3 lg:mb-8">
+                    <button onclick="navigateTo('catalog')" class="flex items-center gap-1.5 font-bold text-slate-400 hover:text-slate-900 transition text-[10px] lg:text-base">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+                        Catálogo
                     </button>
                 </div>
                 
-                <div class="bg-white rounded-3xl lg:rounded-[2.5rem] border border-slate-200 shadow-2xl overflow-hidden mb-10">
-                    <div class="p-5 lg:p-12">
-                        <div class="flex flex-col lg:flex-row gap-6 lg:gap-12">
-                            <div class="lg:w-1/2 space-y-4">
-                                <div class="rounded-2xl lg:rounded-[2rem] overflow-hidden bg-slate-100 aspect-[4/3] shadow-inner">
+                <div class="bg-white rounded-xl lg:rounded-[2.5rem] border border-slate-200 shadow-xl overflow-hidden mb-6 lg:mb-10">
+                    <div class="p-3 lg:p-12">
+                        <div class="flex flex-col lg:flex-row gap-3 lg:gap-12">
+                            <div class="lg:w-1/2 space-y-2 lg:space-y-4">
+                                <div class="rounded-lg lg:rounded-[2rem] overflow-hidden bg-slate-100 aspect-[4/3] shadow-inner">
                                     <img src="${item.photos?.[0] || ''}" class="w-full h-full object-cover" id="main-detail-img">
                                 </div>
                                 <div class="gallery-grid">
                                     ${(item.photos || []).map(p => `
-                                        <div class="aspect-square rounded-xl overflow-hidden bg-slate-100 border-2 border-transparent">
+                                        <div class="aspect-square rounded-md lg:rounded-lg overflow-hidden bg-slate-100 border border-transparent">
                                             <img src="${p}" class="w-full h-full object-cover cursor-pointer" onclick="document.getElementById('main-detail-img').src = this.src">
                                         </div>
                                     `).join('')}
@@ -368,38 +394,41 @@
                             </div>
 
                             <div class="lg:w-1/2 flex flex-col">
-                                <div class="mb-6">
-                                    <h1 class="text-2xl lg:text-4xl font-extrabold text-slate-900 leading-tight mb-2">${item.title}</h1>
-                                    <p class="text-sm lg:text-base font-bold text-slate-400 uppercase tracking-widest">${item.province}, ${item.municipality}</p>
+                                <div class="mb-3 lg:mb-6">
+                                    <h1 class="text-detail-title text-base lg:text-4xl font-extrabold text-slate-900 leading-tight mb-0.5">${item.title}</h1>
+                                    <p class="text-[9px] lg:text-base font-bold text-slate-400 uppercase tracking-widest">${item.province}, ${item.municipality}</p>
                                 </div>
 
-                                <div class="bg-blue-50 p-5 lg:p-6 rounded-2xl mb-6">
-                                    <p class="text-3xl lg:text-4xl font-black text-blue-600">$${Number(item.priceSale).toLocaleString()}</p>
-                                    <p class="text-xs lg:text-sm font-bold text-slate-400 line-through">Antes $${Number(item.priceOriginal).toLocaleString()}</p>
+                                <div class="bg-blue-50 p-3 lg:p-6 rounded-lg lg:rounded-2xl mb-3 lg:mb-6">
+                                    <p class="text-detail-price text-xl lg:text-4xl font-black text-blue-600">$${Number(item.priceSale).toLocaleString()}</p>
+                                    <p class="text-[9px] lg:text-sm font-bold text-slate-400 line-through">Tasa: $${Number(item.priceOriginal).toLocaleString()}</p>
                                 </div>
 
-                                <div class="grid grid-cols-3 gap-3 mb-6">
-                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
-                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Hab</p>
-                                        <p class="text-lg lg:text-xl font-extrabold text-slate-800">${item.rooms}</p>
+                                <div class="grid grid-cols-3 gap-1.5 lg:gap-3 mb-3 lg:mb-6">
+                                    <div class="bg-slate-50 p-1.5 lg:p-4 rounded-lg border border-slate-100 text-center">
+                                        <p class="text-[7px] lg:text-[8px] font-bold text-slate-400 uppercase tracking-wider">Hab</p>
+                                        <p class="text-xs lg:text-xl font-extrabold text-slate-800">${item.rooms}</p>
                                     </div>
-                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
-                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Baños</p>
-                                        <p class="text-lg lg:text-xl font-extrabold text-slate-800">${item.bathrooms}</p>
+                                    <div class="bg-slate-50 p-1.5 lg:p-4 rounded-lg border border-slate-100 text-center">
+                                        <p class="text-[7px] lg:text-[8px] font-bold text-slate-400 uppercase tracking-wider">Baños</p>
+                                        <p class="text-xs lg:text-xl font-extrabold text-slate-800">${item.bathrooms}</p>
                                     </div>
-                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
-                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Ref</p>
-                                        <p class="text-lg lg:text-xl font-extrabold text-slate-800">${item.ref || 'N/A'}</p>
+                                    <div class="bg-slate-50 p-1.5 lg:p-4 rounded-lg border border-slate-100 text-center">
+                                        <p class="text-[7px] lg:text-[8px] font-bold text-slate-400 uppercase tracking-wider">Ref</p>
+                                        <p class="text-xs lg:text-xl font-extrabold text-slate-800">${item.ref || '-'}</p>
                                     </div>
                                 </div>
 
-                                <div class="bg-slate-50 p-5 lg:p-8 rounded-2xl mb-8 flex-1">
-                                    <h3 class="font-bold text-slate-900 mb-2 text-xs lg:text-sm uppercase tracking-widest">Información:</h3>
-                                    <p class="text-base lg:text-lg text-slate-600 leading-relaxed whitespace-pre-line">${item.description}</p>
+                                <div class="bg-slate-50 p-3 lg:p-8 rounded-lg lg:rounded-2xl mb-4 lg:mb-8 flex-1">
+                                    <h3 class="font-bold text-slate-900 mb-1 lg:mb-2 text-[9px] lg:text-sm uppercase tracking-widest">Información:</h3>
+                                    <div class="text-detail-desc text-xs lg:text-lg text-slate-600 leading-relaxed whitespace-pre-line description-truncated">
+                                        ${item.description}
+                                    </div>
+                                    <button onclick="toggleDesc(this)" class="mt-2 text-blue-600 font-bold text-[10px] lg:text-sm">Ver más</button>
                                 </div>
 
-                                <a href="${waLink}" target="_blank" class="w-full bg-[#25D366] text-white text-center py-4 lg:py-5 rounded-2xl font-bold text-lg hover:brightness-105 transition shadow-xl shadow-green-100 flex items-center justify-center gap-3">
-                                    WhatsApp Contacto
+                                <a href="${waLink}" target="_blank" class="w-full bg-[#25D366] text-white text-center py-2.5 lg:py-5 rounded-lg lg:rounded-2xl font-bold text-sm lg:text-lg hover:brightness-105 transition shadow-lg flex items-center justify-center gap-2">
+                                    WhatsApp
                                 </a>
                             </div>
                         </div>
@@ -415,11 +444,11 @@
             const filtered = listingsData.filter(i => i.title.toLowerCase().includes(q) || (i.ref || "").toLowerCase().includes(q));
             document.getElementById('admin-list').innerHTML = filtered.map(item => `
                 <tr>
-                    <td class="px-6 py-4 font-mono text-xs font-bold text-blue-600">${item.ref || 'S/R'}</td>
-                    <td class="px-6 py-4 font-bold text-slate-700 text-sm lg:text-base">${item.title}</td>
-                    <td class="px-6 py-4 text-right space-x-2">
-                        <button onclick="editListing('${item.id}')" class="text-blue-600 font-bold text-xs lg:text-sm">Editar</button>
-                        <button onclick="openDeleteModal('${item.id}')" class="text-red-500 font-bold text-xs lg:text-sm">Borrar</button>
+                    <td class="px-3 py-2 lg:px-6 lg:py-4 font-mono text-[9px] lg:text-xs font-bold text-blue-600">${item.ref || 'S/R'}</td>
+                    <td class="px-3 py-2 lg:px-6 lg:py-4 font-bold text-slate-700 text-[10px] lg:text-base">${item.title}</td>
+                    <td class="px-3 py-2 lg:px-6 lg:py-4 text-right space-x-1 lg:space-x-2">
+                        <button onclick="editListing('${item.id}')" class="text-blue-600 font-bold text-[9px] lg:text-sm px-1">Editar</button>
+                        <button onclick="openDeleteModal('${item.id}')" class="text-red-500 font-bold text-[9px] lg:text-sm px-1">Borrar</button>
                     </td>
                 </tr>
             `).join('');
@@ -430,7 +459,7 @@
             if(!item) return;
             document.getElementById('edit-id').value = id;
             document.getElementById('form-title').innerText = "Editar";
-            document.getElementById('submit-btn').innerText = "Guardar";
+            document.getElementById('submit-btn').innerText = "Actualizar";
             document.getElementById('ref-number').value = item.ref || "";
             document.getElementById('title').value = item.title;
             document.getElementById('property-type').value = item.propertyType;
@@ -474,9 +503,9 @@
                     payload.created_at = serverTimestamp();
                     await addDoc(collection(db, 'artifacts', app_id, 'public', 'data', 'listings'), payload);
                 }
-                showToast("Guardado correctamente");
+                showToast("Éxito");
                 navigateTo('admin-panel');
-            } catch (err) { showToast("Error al guardar"); }
+            } catch (err) { showToast("Error"); }
         };
 
         document.getElementById('form-login').onsubmit = (e) => {
@@ -512,7 +541,7 @@
             const t = document.getElementById('toast');
             document.getElementById('toast-text').innerText = m;
             t.classList.remove('translate-y-32', 'opacity-0');
-            setTimeout(() => t.classList.add('translate-y-32', 'opacity-0'), 3000);
+            setTimeout(() => t.classList.add('translate-y-32', 'opacity-0'), 2500);
         }
 
         window.updateMunicipalities = () => {
@@ -522,14 +551,14 @@
 
         window.updateFilterMunicipalities = () => {
             const prov = document.getElementById('filter-province').value;
-            document.getElementById('filter-municipality').innerHTML = '<option value="">Todos</option>' + (cubaData[prov] || []).map(m => `<option value="${m}">${m}</option>`).join('');
+            document.getElementById('filter-municipality').innerHTML = '<option value="">Mun</option>' + (cubaData[prov] || []).map(m => `<option value="${m}">${m}</option>`).join('');
             applyFilters();
         };
 
         const init = async () => {
             const provs = Object.keys(cubaData).sort();
             document.getElementById('province').innerHTML = provs.map(p => `<option value="${p}">${p}</option>`).join('');
-            document.getElementById('filter-province').innerHTML = '<option value="">Provincia</option>' + provs.map(p => `<option value="${p}">${p}</option>`).join('');
+            document.getElementById('filter-province').innerHTML = '<option value="">Prov</option>' + provs.map(p => `<option value="${p}">${p}</option>`).join('');
             updateMunicipalities();
             onAuthStateChanged(auth, async (u) => { u ? startSync() : await signInAnonymously(auth); });
         };
